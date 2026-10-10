@@ -1,0 +1,123 @@
+@import './fonts.css';
+@import './crux.css';
+
+:root {
+  --font-display-original: 'Barlow Condensed', sans-serif;
+  --font-hand: 'Barlow Condensed', sans-serif;
+  --font-display-desktop: 'Barlow Condensed', sans-serif;
+  --bg-wall-original: #202c35;
+  --bg-wall-desktop: #F8F8F8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-display-original);
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+#game-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-wall-original);
+}
+
+canvas#viewport {
+  display: block;
+  touch-action: none;
+  background: transparent;
+  /* GameFacade sets an explicit CSS size; don't let flex resize it away from that, or the
+     painted size stops matching the camera's model and pointer mapping drifts. */
+  flex: none;
+}
+
+.shell-banner {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display-original);
+  font-size: 32px;
+  letter-spacing: 2px;
+  color: #7A5A48;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.load-error {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+  background: rgba(20, 16, 14, 0.92);
+  color: #F4EDE2;
+}
+
+/* A class selector's `display: flex` would otherwise outrank the UA stylesheet's `[hidden]`
+   attribute selector, leaving this full-screen overlay visible (and intercepting all pointer
+   events) even while the `hidden` attribute is set. Only flip to flex once unhidden. */
+.load-error:not([hidden]) {
+  display: flex;
+}
+
+.load-error h2 {
+  font-family: var(--font-display-original);
+  font-size: 28px;
+  letter-spacing: 1px;
+}
+
+.load-error p {
+  max-width: 480px;
+  font-family: sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #DDD0B4;
+}
+
+.load-error button {
+  margin-top: 8px;
+  padding: 8px 24px;
+  font-family: var(--font-display-original);
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #2B2A3C;
+  background: #DDD0B4;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.load-error button:hover {
+  background: #F4EDE2;
+}

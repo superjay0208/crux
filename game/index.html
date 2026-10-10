@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:," />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crux — A Climbing Puzzle</title>
+    <link rel="stylesheet" href="/src/ui/styles/shared.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="game-container">
+        <h1 class="shell-banner" id="shell-title">CRUX</h1>
+        <canvas id="viewport" width="1280" height="720"></canvas>
+      </div>
+      <div id="load-error" class="load-error" hidden>
+        <h2>Couldn't start Crux</h2>
+        <p id="load-error-message"></p>
+        <button id="load-error-retry" type="button">Retry</button>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+

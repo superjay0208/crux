@@ -1,0 +1,453 @@
+[
+  {
+    "id": "first_light",
+    "steps": [
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "thin_edge",
+    "steps": [
+      {
+        "limb": "leftHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "switchback",
+    "steps": [
+      {
+        "limb": "leftFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "contact",
+    "steps": [
+      {
+        "limb": "leftFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "sidewinder",
+    "steps": [
+      {
+        "limb": "rightFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "leftHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "high_step"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "balance",
+    "steps": [
+      {
+        "limb": "rightFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "leftHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "balance_step"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "crossover",
+    "steps": [
+      {
+        "limb": "leftFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "exit",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "far_step"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "pinpoint",
+    "steps": [
+      {
+        "limb": "leftFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "needle",
+        "crimp": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "high_step"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "top",
+        "crimp": true
+      }
+    ]
+  },
+  {
+    "id": "chalk_line",
+    "steps": [
+      {
+        "limb": "rightFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "leftHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "high_step"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "needle",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "upper_rest"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "last_jug"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "offset",
+    "steps": [
+      {
+        "limb": "leftFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "exit",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "far_step"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "needle",
+        "crimp": true
+      },
+      {
+        "limb": "leftHand",
+        "hold": "upper_rest"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "sequence",
+    "steps": [
+      {
+        "limb": "rightFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "leftHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "high_step"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "needle",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "upper_rest"
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "pivot_high"
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "pivot_high",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "left_high"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "last_jug"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  },
+  {
+    "id": "crux",
+    "steps": [
+      {
+        "limb": "leftFoot",
+        "hold": "pivot",
+        "swap": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "exit"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "edge",
+        "crimp": true
+      },
+      {
+        "limb": "rightHand",
+        "hold": "rest"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "ledge"
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "high_step"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "needle",
+        "crimp": true
+      },
+      {
+        "limb": "leftHand",
+        "hold": "upper_rest"
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "pivot_high"
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "pivot_high",
+        "swap": true
+      },
+      {
+        "limb": "leftFoot",
+        "hold": "left_high"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "last_jug"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "final_edge",
+        "crimp": true
+      },
+      {
+        "limb": "rightFoot",
+        "hold": "final_step"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
+      }
+    ]
+  }
+]

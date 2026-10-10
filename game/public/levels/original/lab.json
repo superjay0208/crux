@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "id": "lab",
+  "profile": "original_browser",
+  "name": "LAB",
+  "group": null,
+  "order": 0,
+  "camera": {
+    "center": [
+      0,
+      0
+    ],
+    "height": 10,
+    "aspect": 1.7778
+  },
+  "holds": [
+    {
+      "id": "h1",
+      "shape": "circle",
+      "color": "#eff0d9",
+      "pos": [
+        0.4,
+        1.2
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 2,
+      "allowHands": true,
+      "allowFeet": true,
+      "finish": true,
+      "outline": [
+        [
+          -0.3,
+          -0.2
+        ],
+        [
+          0.3,
+          -0.2
+        ],
+        [
+          0.2,
+          0.3
+        ],
+        [
+          -0.2,
+          0.3
+        ]
+      ]
+    },
+    {
+      "id": "h2",
+      "shape": "pebble",
+      "color": "#8cdec1",
+      "pos": [
+        -0.35,
+        0.4
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.25,
+          -0.15
+        ],
+        [
+          0.25,
+          -0.15
+        ],
+        [
+          0.2,
+          0.2
+        ],
+        [
+          -0.2,
+          0.2
+        ]
+      ]
+    },
+    {
+      "id": "h3",
+      "shape": "pebble",
+      "color": "#8cdec1",
+      "pos": [
+        0.35,
+        0.4
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.25,
+          -0.15
+        ],
+        [
+          0.25,
+          -0.15
+        ],
+        [
+          0.2,
+          0.2
+        ],
+        [
+          -0.2,
+          0.2
+        ]
+      ]
+    },
+    {
+      "id": "h4",
+      "shape": "pebble",
+      "color": "#8cdec1",
+      "pos": [
+        -0.25,
+        -0.7
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.25,
+          -0.15
+        ],
+        [
+          0.25,
+          -0.15
+        ],
+        [
+          0.2,
+          0.2
+        ],
+        [
+          -0.2,
+          0.2
+        ]
+      ]
+    },
+    {
+      "id": "h5",
+      "shape": "pebble",
+      "color": "#8cdec1",
+      "pos": [
+        0.25,
+        -0.7
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.25,
+          -0.15
+        ],
+        [
+          0.25,
+          -0.15
+        ],
+        [
+          0.2,
+          0.2
+        ],
+        [
+          -0.2,
+          0.2
+        ]
+      ]
+    }
+  ],
+  "start": {
+    "leftHand": "h2",
+    "rightHand": "h3",
+    "leftFoot": "h4",
+    "rightFoot": "h5"
+  },
+  "targets": {
+    "moves": 1,
+    "timeSeconds": 5,
+    "elimination": null
+  }
+}

@@ -1,0 +1,580 @@
+{
+  "schemaVersion": 1,
+  "id": "chalk_line",
+  "profile": "original_browser",
+  "name": "CHALK LINE",
+  "group": "CAMPAIGN",
+  "order": 9,
+  "camera": {
+    "center": [
+      0,
+      0.8
+    ],
+    "height": 8.7,
+    "aspect": 1.7777777777777777
+  },
+  "holds": [
+    {
+      "id": "start_left",
+      "shape": "jug",
+      "grip": "jug",
+      "color": "#8cdec1",
+      "pos": [
+        0.65,
+        0.35
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.28,
+          -0.12
+        ],
+        [
+          -0.18,
+          -0.25
+        ],
+        [
+          0.1,
+          -0.24
+        ],
+        [
+          0.3,
+          -0.07
+        ],
+        [
+          0.24,
+          0.17
+        ],
+        [
+          0.06,
+          0.25
+        ],
+        [
+          -0.21,
+          0.17
+        ]
+      ]
+    },
+    {
+      "id": "start_right",
+      "shape": "jug",
+      "grip": "jug",
+      "color": "#8cdec1",
+      "pos": [
+        -0.65,
+        0.35
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.28,
+          -0.12
+        ],
+        [
+          -0.18,
+          -0.25
+        ],
+        [
+          0.1,
+          -0.24
+        ],
+        [
+          0.3,
+          -0.07
+        ],
+        [
+          0.24,
+          0.17
+        ],
+        [
+          0.06,
+          0.25
+        ],
+        [
+          -0.21,
+          0.17
+        ]
+      ]
+    },
+    {
+      "id": "left_foot",
+      "shape": "foot",
+      "grip": "jug",
+      "color": "#90a7be",
+      "pos": [
+        0.6,
+        -1.25
+      ],
+      "rot": 0.05,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": false,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.16,
+          -0.07
+        ],
+        [
+          0.15,
+          -0.07
+        ],
+        [
+          0.12,
+          0.1
+        ],
+        [
+          -0.12,
+          0.12
+        ]
+      ]
+    },
+    {
+      "id": "pivot",
+      "shape": "foot",
+      "grip": "jug",
+      "color": "#90a7be",
+      "pos": [
+        -0.18,
+        -1.25
+      ],
+      "rot": 0.05,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": false,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.16,
+          -0.07
+        ],
+        [
+          0.15,
+          -0.07
+        ],
+        [
+          0.12,
+          0.1
+        ],
+        [
+          -0.12,
+          0.12
+        ]
+      ]
+    },
+    {
+      "id": "edge",
+      "shape": "crimp",
+      "grip": "crimp",
+      "color": "#ffb86b",
+      "pos": [
+        0.78,
+        1.06
+      ],
+      "rot": -0.12,
+      "scale": 0.85,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.3,
+          -0.055
+        ],
+        [
+          0.28,
+          -0.055
+        ],
+        [
+          0.31,
+          0.065
+        ],
+        [
+          -0.28,
+          0.09
+        ]
+      ]
+    },
+    {
+      "id": "exit",
+      "shape": "foot",
+      "grip": "jug",
+      "color": "#90a7be",
+      "pos": [
+        -1.28,
+        -1.25
+      ],
+      "rot": 0.05,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": false,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.16,
+          -0.07
+        ],
+        [
+          0.15,
+          -0.07
+        ],
+        [
+          0.12,
+          0.1
+        ],
+        [
+          -0.12,
+          0.12
+        ]
+      ]
+    },
+    {
+      "id": "rest",
+      "shape": "jug",
+      "grip": "jug",
+      "color": "#8cdec1",
+      "pos": [
+        -0.95,
+        1
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.28,
+          -0.12
+        ],
+        [
+          -0.18,
+          -0.25
+        ],
+        [
+          0.1,
+          -0.24
+        ],
+        [
+          0.3,
+          -0.07
+        ],
+        [
+          0.24,
+          0.17
+        ],
+        [
+          0.06,
+          0.25
+        ],
+        [
+          -0.21,
+          0.17
+        ]
+      ]
+    },
+    {
+      "id": "ledge",
+      "shape": "jug",
+      "grip": "jug",
+      "color": "#8cdec1",
+      "pos": [
+        0.2,
+        1.8
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.28,
+          -0.12
+        ],
+        [
+          -0.18,
+          -0.25
+        ],
+        [
+          0.1,
+          -0.24
+        ],
+        [
+          0.3,
+          -0.07
+        ],
+        [
+          0.24,
+          0.17
+        ],
+        [
+          0.06,
+          0.25
+        ],
+        [
+          -0.21,
+          0.17
+        ]
+      ]
+    },
+    {
+      "id": "high_step",
+      "shape": "foot",
+      "grip": "jug",
+      "color": "#90a7be",
+      "pos": [
+        -0.9,
+        -0.65
+      ],
+      "rot": 0.05,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": false,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.16,
+          -0.07
+        ],
+        [
+          0.15,
+          -0.07
+        ],
+        [
+          0.12,
+          0.1
+        ],
+        [
+          -0.12,
+          0.12
+        ]
+      ]
+    },
+    {
+      "id": "needle",
+      "shape": "crimp",
+      "grip": "crimp",
+      "color": "#ffb86b",
+      "pos": [
+        -1.1,
+        1.9
+      ],
+      "rot": -0.12,
+      "scale": 0.85,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.3,
+          -0.055
+        ],
+        [
+          0.28,
+          -0.055
+        ],
+        [
+          0.31,
+          0.065
+        ],
+        [
+          -0.28,
+          0.09
+        ]
+      ]
+    },
+    {
+      "id": "upper_rest",
+      "shape": "jug",
+      "grip": "jug",
+      "color": "#8cdec1",
+      "pos": [
+        -0.1,
+        2.45
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.28,
+          -0.12
+        ],
+        [
+          -0.18,
+          -0.25
+        ],
+        [
+          0.1,
+          -0.24
+        ],
+        [
+          0.3,
+          -0.07
+        ],
+        [
+          0.24,
+          0.17
+        ],
+        [
+          0.06,
+          0.25
+        ],
+        [
+          -0.21,
+          0.17
+        ]
+      ]
+    },
+    {
+      "id": "last_jug",
+      "shape": "jug",
+      "grip": "jug",
+      "color": "#8cdec1",
+      "pos": [
+        -1.15,
+        2.6
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": false,
+      "outline": [
+        [
+          -0.28,
+          -0.12
+        ],
+        [
+          -0.18,
+          -0.25
+        ],
+        [
+          0.1,
+          -0.24
+        ],
+        [
+          0.3,
+          -0.07
+        ],
+        [
+          0.24,
+          0.17
+        ],
+        [
+          0.06,
+          0.25
+        ],
+        [
+          -0.21,
+          0.17
+        ]
+      ]
+    },
+    {
+      "id": "top",
+      "shape": "jug",
+      "grip": "jug",
+      "color": "#eff0d9",
+      "pos": [
+        -0.55,
+        3.1
+      ],
+      "rot": 0,
+      "scale": 1,
+      "capacity": 2,
+      "allowHands": true,
+      "allowFeet": false,
+      "finish": true,
+      "outline": [
+        [
+          -0.28,
+          -0.12
+        ],
+        [
+          -0.18,
+          -0.25
+        ],
+        [
+          0.1,
+          -0.24
+        ],
+        [
+          0.3,
+          -0.07
+        ],
+        [
+          0.24,
+          0.17
+        ],
+        [
+          0.06,
+          0.25
+        ],
+        [
+          -0.21,
+          0.17
+        ]
+      ]
+    }
+  ],
+  "start": {
+    "leftHand": "start_right",
+    "rightHand": "start_left",
+    "leftFoot": "pivot",
+    "rightFoot": "left_foot"
+  },
+  "targets": {
+    "moves": 10,
+    "timeSeconds": null,
+    "elimination": null
+  },
+  "movement": {
+    "crossedReachFraction": 0.64,
+    "crossTransition": 0.55
+  },
+  "goals": {
+    "crimpHold": "edge",
+    "footSwaps": 1,
+    "checkpoints": [
+      "rest",
+      "ledge",
+      "high_step",
+      "needle",
+      "upper_rest",
+      "last_jug"
+    ]
+  },
+  "finishSupportHold": "high_step",
+  "tutorial": [
+    {
+      "type": "text",
+      "text": "Recover on jugs between edges."
+    }
+  ],
+  "sourceConfidence": "authored",
+  "sourceNotes": "Original Crux routes with validated grip and support sequences."
+}

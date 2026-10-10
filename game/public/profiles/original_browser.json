@@ -1,0 +1,117 @@
+{
+  "id": "original_browser",
+  "schemaVersion": 1,
+  "viewport": {
+    "w": 1280,
+    "h": 720
+  },
+  "physics": {
+    "gravity": [
+      0,
+      -12
+    ],
+    "hz": 120,
+    "torsoMass": 8,
+    "endpointMass": 0.5,
+    "torsoDamping": [
+      0.6,
+      1.2
+    ],
+    "endpointDamping": 1.5,
+    "armReach": 1.425,
+    "legReach": 1.575,
+    "shoulder": [
+      0.39,
+      0.63
+    ],
+    "hip": [
+      0.21,
+      -0.78
+    ],
+    "correctionFactor": 0.3,
+    "gain": [
+      0,
+      0.7,
+      1.3,
+      2
+    ],
+    "legPushBonus": 0.35,
+    "forceCeilingG": 3,
+    "captureInflate": 0.1
+  },
+  "rules": {
+    "finishRequires": "one_hand",
+    "handsRequiredToHold": 1,
+    "handsGraceSeconds": 0.15,
+    "defaultHoldCapacity": 1,
+    "stamina": {
+      "mode": "fall",
+      "drainPerSecond": 0.2,
+      "refillPerSecond": 1.6,
+      "drainWhile": "dragging",
+      "fadeOutSeconds": 0.4,
+      "drainBase": 0.16,
+      "effortGain": 0.6
+    },
+    "moveCounting": {
+      "returnToSameHoldCounts": false,
+      "failedGrabCounts": false
+    },
+    "starComparator": "lte",
+    "unlock": "sequential",
+    "dropLimbAction": "none",
+    "rightClickSwap": false,
+    "crimp": {
+      "drainPerSecond": 0.1666667,
+      "recoverPerSecond": 0.25,
+      "openGripGraceSeconds": 0.75,
+      "reengageFraction": 0.15
+    },
+    "footSwap": {
+      "enabled": true,
+      "windowSeconds": 3.6,
+      "revolutionsPerSecond": 0.55,
+      "targetCenter": 0.5,
+      "targetWidth": 0.22
+    }
+  },
+  "visual": {
+    "wall": "beige",
+    "outline": true,
+    "fonts": {
+      "display": "Bebas Neue",
+      "hand": "Gochi Hand"
+    },
+    "palette": {
+      "wall": "#202c35",
+      "skin": "#d5aa88",
+      "shirt": "#62bea8",
+      "shorts": "#152129",
+      "shoes": "#cedcd1",
+      "holds": [
+        "#BB3659",
+        "#7B38BD",
+        "#FFA600",
+        "#2A734D"
+      ],
+      "stamina": [
+        "#5CB870",
+        "#E6D33A",
+        "#E0602A",
+        "#C8323B"
+      ]
+    }
+  },
+  "audio": {
+    "events": {
+      "grab": "grab_01",
+      "release": "release_01",
+      "fall": [
+        "fall_uh_01",
+        "fall_uh_02"
+      ],
+      "finish": "finish_01",
+      "click": "ui_click"
+    }
+  }
+}

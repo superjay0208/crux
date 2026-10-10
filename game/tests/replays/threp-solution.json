@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "profile": "original_browser",
+  "levelId": "threp",
+  "physicsHz": 120,
+  "commands": [
+    { "tick": 5, "type": "down", "limb": "rightFoot", "pos": [0.7639, -4.0972] },
+    { "tick": 20, "type": "move", "pos": [0.5, -3.2] },
+    { "tick": 40, "type": "move", "pos": [0.597, -2.68] },
+    { "tick": 90, "type": "up", "pos": [0.597, -2.68] },
+    { "tick": 110, "type": "down", "limb": "leftFoot", "pos": [-1.7361, -3.7778] },
+    { "tick": 130, "type": "move", "pos": [-1.4, -2.6] },
+    { "tick": 150, "type": "move", "pos": [-1.1667, -1.8056] },
+    { "tick": 220, "type": "up", "pos": [-1.1667, -1.8056] },
+    { "tick": 240, "type": "down", "limb": "rightHand", "pos": [1.0556, -1.0833] },
+    { "tick": 260, "type": "move", "pos": [0.7, -0.2] },
+    { "tick": 290, "type": "move", "pos": [0.4861, 0.4167] },
+    { "tick": 380, "type": "up", "pos": [0.4861, 0.4167] },
+    { "tick": 400, "type": "down", "limb": "rightFoot", "pos": [0.597, -2.68] },
+    { "tick": 420, "type": "move", "pos": [0.8, -1.8] },
+    { "tick": 440, "type": "move", "pos": [1.0556, -1.0833] },
+    { "tick": 500, "type": "up", "pos": [1.0556, -1.0833] },
+    { "tick": 520, "type": "down", "limb": "leftHand", "pos": [-1.4444, -0.25] },
+    { "tick": 540, "type": "move", "pos": [-0.8, 0.6] },
+    { "tick": 570, "type": "move", "pos": [-0.375, 1.7778] },
+    { "tick": 700, "type": "up", "pos": [-0.375, 1.7778] }
+  ],
+  "expected": {
+    "finishedAtTick": 700,
+    "moves": 5
+  }
+}

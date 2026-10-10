@@ -1,0 +1,37 @@
+{
+  "name": "crux",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && node scripts/write-build-info.mjs",
+    "preview": "vite preview",
+    "check": "tsc --noEmit && vitest run",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "web:check": "node scripts/validate-web.mjs",
+    "sim": "tsx scripts/sim-cli.ts",
+    "levels:check": "tsx scripts/levels-check.ts",
+    "campaign:build": "node scripts/build-campaign.mjs",
+    "campaign:check": "tsx scripts/validate-campaign.ts",
+    "launch": "node scripts/launch.mjs",
+    "launch:stop": "node scripts/launch.mjs --stop"
+  },
+  "dependencies": {
+    "planck": "1.5.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.10.1",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
+    "@vitest/coverage-v8": "^2.1.8",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  }
+}

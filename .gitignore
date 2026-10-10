@@ -1,0 +1,14 @@
+game/node_modules/
+game/dist/
+game/test-results/
+game/playwright-report/
+game/.launcher/
+game/tools/
+game/coverage/
+validation/
+.release/
+*.log
+*.zip
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
