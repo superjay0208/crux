@@ -34,4 +34,20 @@ route challenges but alternate beta is possible. Difficulty has proven solvabili
 sequence/precision demands, but enjoyment and grading still need human playtesting. Desktop
 keyboard plus mouse is the supported control scheme; touch crimp buttons are future work.
 
-Remote publication verification is recorded below after deployment.
+Remote verification:
+
+- Public repository: https://github.com/superjay0208/crux
+- Playable release: https://superjay0208.github.io/crux/
+- [GitHub release workflow](https://github.com/superjay0208/crux/actions/runs/38024272379)
+  succeeded on Linux/Chromium, including all validation steps and Pages deployment.
+- Deployed source commit: `f1a1fd26314c3e611294c20112adc69fc81600e5`.
+- Live build identifier: `d7ba2562a6eee51c`. Local build identifier: `22aa0e9ed28417a2`.
+  A comparison of all 38 content files found only carriage-return differences in index.html
+  and the four font notices; JavaScript, CSS, fonts, routes and demos match byte for byte.
+  Both artifacts passed their browser checks.
+- The live URL passed demo playback, real first-route completion, progression saved through
+  reload, direct finale navigation, JSON and font loading without console or HTTP errors.
+- Added a Crux card to the existing portfolio using its current styles, plus a brief tagline
+  and accessibility label update. [Portfolio commit](https://github.com/superjay0208/superjay0208.github.io/commit/a3dc5c930f1c35fec5c1278fbbd005f11cf6e5b7)
+  deployed successfully. Browser verification followed the live card into the game's start
+  screen and confirmed that all six original course-menu links and dropdown behavior remain.

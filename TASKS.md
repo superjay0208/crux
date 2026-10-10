@@ -7,12 +7,16 @@ Current polish plan: [docs/12-framing-demo-and-web-release.md](docs/12-framing-d
 - [x] S2 Limb-bound grip rings and swap wheel, clear fatigue warning.
 - [x] S3 Animated climbing start screen and clean navigation lifecycle.
 - [x] S4 Distinct harder routes with proven physics and browser solutions.
-- [ ] S5 Web-path compatibility, GitHub repository and Pages publishing.
-- [ ] S6 Production browser, framing, UI, route and deployment validation.
+- [x] S5 Web-path compatibility, GitHub repository and Pages publishing.
+- [x] S6 Production browser, framing, UI, route and deployment validation.
 
-Publishing access: existing Git Credential Manager login verified as superjay0208; ready to publish.
+Publishing status: [game live](https://superjay0208.github.io/crux/) and [repository created](https://github.com/superjay0208/crux).
+GitHub Linux/Chromium build and deployment passed. Public URL gameplay/save/assets smoke passed.
+Portfolio game card deployed and verified; original course dropdown still works.
+All requested polish/release tasks complete. Optional future work is listed below.
+Local checks: 70 unit tests, 32 production browser tests, all 12 solutions/replays, and project-path smoke pass.
 
-Active request: independent identity and style; progressive grip/swap campaign; constrained crossed-foot
+Previous completed request: independent identity and style; progressive grip/swap campaign; constrained crossed-foot
 reach; spinning green-zone QTE; contact effects; detailed research and validation.
 
 Plan: [docs/11-crux-campaign-and-timing-plan.md](docs/11-crux-campaign-and-timing-plan.md).
@@ -41,7 +45,7 @@ Plan: [docs/11-crux-campaign-and-timing-plan.md](docs/11-crux-campaign-and-timin
 
 ## Follow-up after this playable slice
 
-- Tune difficulty and expand routes beyond short mechanics exercises using human play feedback.
+- Human playtesting to tune difficulty and explore alternate solutions on the expanded campaign.
 - More complete articulated hip/knee/heel-hook mechanics and directional hold friction.
 - A persistent accessibility/settings panel and optional slower timing mode.
 - Package the runtime inside a standalone release folder; the current launch uses the workspace Node.
