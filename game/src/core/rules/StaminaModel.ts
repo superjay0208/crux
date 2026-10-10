@@ -22,6 +22,19 @@ export class StaminaModel {
     this.isVisible = false;
   }
 
+  spend(amount: number): void { this.value = clamp01(this.value - amount); }
+
+  updateRealism(dt: number, dragging: boolean, effort: number, armLoad: number, oneHand: boolean,
+    crimpHands: number, recovering: boolean): 'exhausted' | null {
+    const cfg = this.profile.rules.realism!;
+    this.isVisible = true;
+    const previous = this.value;
+    const loss = cfg.idleDrain + cfg.armLoadDrain * armLoad * armLoad * (oneHand ? 1.7 : 1) +
+      crimpHands * .003 + (dragging ? cfg.moveDrain * (1 + armLoad + Math.min(3, effort) * .35) : 0);
+    this.value = clamp01(this.value + dt * (recovering ? cfg.shakeRecover - loss : -loss));
+    return previous > 0 && this.value <= 1e-9 ? (this.value = 0, 'exhausted') : null;
+  }
+
   /**
    * Updates stamina integration for one tick
    * @returns 'exhausted' if stamina just depleted to 0, otherwise null

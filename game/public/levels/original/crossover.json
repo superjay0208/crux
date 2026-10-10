@@ -289,46 +289,12 @@
       ]
     },
     {
-      "id": "far_step",
-      "shape": "foot",
-      "grip": "jug",
-      "color": "#90a7be",
-      "pos": [
-        1.65,
-        -0.55
-      ],
-      "rot": -0.05,
-      "scale": 1,
-      "capacity": 1,
-      "allowHands": false,
-      "allowFeet": true,
-      "finish": false,
-      "outline": [
-        [
-          -0.16,
-          -0.07
-        ],
-        [
-          0.15,
-          -0.07
-        ],
-        [
-          0.12,
-          0.1
-        ],
-        [
-          -0.12,
-          0.12
-        ]
-      ]
-    },
-    {
       "id": "ledge",
       "shape": "jug",
       "grip": "jug",
       "color": "#8cdec1",
       "pos": [
-        0.15,
+        1.1,
         1.95
       ],
       "rot": 0,
@@ -365,6 +331,40 @@
         [
           -0.21,
           0.17
+        ]
+      ]
+    },
+    {
+      "id": "far_step",
+      "shape": "foot",
+      "grip": "jug",
+      "color": "#90a7be",
+      "pos": [
+        1.65,
+        -0.55
+      ],
+      "rot": -0.05,
+      "scale": 1,
+      "capacity": 1,
+      "allowHands": false,
+      "allowFeet": true,
+      "finish": false,
+      "outline": [
+        [
+          -0.16,
+          -0.07
+        ],
+        [
+          0.15,
+          -0.07
+        ],
+        [
+          0.12,
+          0.1
+        ],
+        [
+          -0.12,
+          0.12
         ]
       ]
     },
@@ -422,7 +422,7 @@
     "rightFoot": "pivot"
   },
   "targets": {
-    "moves": 8,
+    "moves": 9,
     "timeSeconds": null,
     "elimination": null
   },
@@ -435,8 +435,8 @@
     "footSwaps": 2,
     "checkpoints": [
       "rest",
-      "far_step",
-      "ledge"
+      "ledge",
+      "far_step"
     ]
   },
   "finishSupportHold": "far_step",

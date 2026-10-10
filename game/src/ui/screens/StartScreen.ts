@@ -1,4 +1,5 @@
-import { LevelData, ProfileConfig, ReplayData } from '../../core/data/schema';
+import { LevelData, ProfileConfig, ProfileId, ReplayData } from '../../core/data/schema';
+import { modeSwitch } from './ModeSwitch';
 import { Simulation } from '../../core/sim/Simulation';
 import { assetUrl } from '../../core/data/assets';
 import { Camera } from '../../render/Camera';
@@ -27,7 +28,7 @@ export class StartScreen {
   private abort = new AbortController();
   private motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  constructor(parent: HTMLElement, private levels: LevelData[], private profile: ProfileConfig, onPlay: () => void) {
+  constructor(parent: HTMLElement, private levels: LevelData[], private profile: ProfileConfig, onPlay: () => void, onMode: (id: ProfileId) => void) {
     this.root=document.createElement('section');
     this.root.className='start-screen';
     this.root.innerHTML=`<canvas class="demo-canvas" aria-hidden="true"></canvas><div class="start-shade"></div>
@@ -37,6 +38,10 @@ export class StartScreen {
       <div class="start-control-copy" hidden>Drag a hand or shoe.<br>Hold Q / E on crimps.<br>Press Space on green to swap feet.</div></div>
       <div class="start-demo-label">LIVE CLIMB <span data-testid="demo-route"></span></div>`;
     parent.appendChild(this.root);
+    this.root.querySelector('.start-play')!.before(modeSwitch(profile.id, onMode));
+    if (profile.rules.realism) this.root.querySelector('.start-control-copy')!.insertAdjacentHTML('beforeend',
+      '<br>Hold Z / C to rest a hand on supported jugs.<br>Move your feet up. Match the finish with both hands.');
+    else this.root.querySelector('.start-control-copy')!.insertAdjacentHTML('beforeend','<br>Match the finish with both hands.');
     this.canvas=this.root.querySelector('canvas')!;
     this.ctx=this.canvas.getContext('2d')!;
     this.wall=new WallRenderer(profile);this.holds=new HoldRenderer(profile);
@@ -56,11 +61,12 @@ export class StartScreen {
 
   private async load(): Promise<void> {
     try {
-      const res=await fetch(assetUrl('demos/playlist.json'),{signal:this.abort.signal});
+      const folder = this.profile.id === 'realism' ? 'demos/realism' : 'demos';
+      const res=await fetch(assetUrl(`${folder}/playlist.json`),{signal:this.abort.signal});
       if(!res.ok)throw new Error(`Demo HTTP ${res.status}`);
       const files=await res.json() as string[];
       this.playlist=await Promise.all(files.map(async file=>{
-        const response=await fetch(assetUrl(`demos/${file}`),{signal:this.abort.signal});
+        const response=await fetch(assetUrl(`${folder}/${file}`),{signal:this.abort.signal});
         if(!response.ok)throw new Error(`Demo HTTP ${response.status}`);
         return response.json() as Promise<ReplayData>;
       }));

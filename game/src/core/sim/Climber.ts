@@ -20,10 +20,12 @@ export class Climber {
   readonly limbs: Record<LimbId, LimbState>;
   readonly physics: ProfilePhysics;
   private world: World;
+  private compressiveFeet: boolean;
 
-  constructor(world: World, physics: ProfilePhysics, initialCenter: Vec2D = { x: 0, y: 0 }) {
+  constructor(world: World, physics: ProfilePhysics, initialCenter: Vec2D = { x: 0, y: 0 }, compressiveFeet = false) {
     this.physics = physics;
     this.world = world;
+    this.compressiveFeet = compressiveFeet;
 
     // Create Torso Body
     this.torso = world.createDynamicBody({
@@ -172,6 +174,10 @@ export class Climber {
     limb.body.setPosition(Vec2(anchorWorld.x, anchorWorld.y));
     limb.status = 'attached';
     limb.holdId = holdId;
+    if (this.compressiveFeet && id.endsWith('Foot') && limb.joint) {
+      this.world.destroyJoint(limb.joint);
+      limb.joint = null;
+    }
   }
 
   /**
@@ -238,6 +244,7 @@ export class Climber {
 
   startDragging(id: LimbId): void {
     const limb = this.limbs[id];
+    this.restoreLimbJoint(id);
     if (limb.status === 'attached') {
       limb.fromHoldId = limb.holdId;
       limb.holdId = null;

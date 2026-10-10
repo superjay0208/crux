@@ -4,7 +4,7 @@ import { MenuCrux } from '../ui/screens/MenuCrux';
 import { StartScreen } from '../ui/screens/StartScreen';
 import { SaveStore } from '../persist/SaveStore';
 import { AudioBank } from '../audio/AudioBank';
-import { LevelData, ProfileConfig } from '../core/data/schema';
+import { LevelData, ProfileConfig, ProfileId } from '../core/data/schema';
 import { GameEvent } from '../core/rules/Session';
 
 export interface RouterOptions {
@@ -14,6 +14,7 @@ export interface RouterOptions {
   levels: LevelData[];
   saveStore: SaveStore;
   audio: AudioBank;
+  modes: Record<string, { profile: ProfileConfig; levels: LevelData[] }>;
 }
 
 /** Owns the Crux campaign menu, practice navigation, results and saved progression. */
@@ -27,6 +28,7 @@ export class Router {
   private playScreen: PlayScreen;
   private menu: MenuCrux | null = null;
   private startScreen: StartScreen | null = null;
+  private modes: RouterOptions['modes'];
 
   constructor(options: RouterOptions) {
     this.container = options.container;
@@ -35,6 +37,7 @@ export class Router {
     this.levels = options.levels;
     this.saveStore = options.saveStore;
     this.audio = options.audio;
+    this.modes = options.modes;
     this.playScreen = new PlayScreen(this.container, this.canvas);
 
     // Audio unlock needs a user gesture; the first pointer/click anywhere satisfies it.
@@ -57,13 +60,23 @@ export class Router {
     this.menu = new MenuCrux(this.container, this.levels, this.saveStore, {
       onSelectLevel: (levelId) => this.showLevel(levelId),
       onHome: () => this.showStart(),
-    });
+      onMode: profile => this.selectMode(profile, false),
+    }, this.profile.id);
   }
 
   showStart(): void {
     this.playScreen.destroy();this.menu?.destroy();this.menu=null;
     this.startScreen?.destroy();this.canvas.style.display='none';
-    this.startScreen=new StartScreen(this.container,this.levels,this.profile,()=>this.showMenu());
+    this.startScreen=new StartScreen(this.container,this.levels,this.profile,()=>this.showMenu(),profile=>this.selectMode(profile,true));
+  }
+
+  getProfile(): ProfileConfig { return this.profile; }
+  getLevels(): LevelData[] { return this.levels; }
+  private selectMode(id: ProfileId, start: boolean): void {
+    const mode = this.modes[id]; if (!mode) return;
+    this.profile = mode.profile; this.levels = mode.levels;
+    this.saveStore.setSelectedProfile(id); this.saveStore.setCampaign(this.levels);
+    if (start) this.showStart(); else this.showMenu();
   }
 
   showLevel(levelId: string): void {
@@ -104,7 +117,7 @@ export class Router {
         case 'Finished': {
           this.audio.play('finish');
           this.saveStore.recordCompletion(
-            'original_browser',
+            this.profile.id,
             levelId,
             event.result.moves,
             event.result.timeSeconds,

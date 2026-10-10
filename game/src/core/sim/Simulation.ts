@@ -2,6 +2,7 @@ import { World, Vec2 } from 'planck';
 import { Climber, LimbStatus } from './Climber';
 import { DragActuator } from './DragActuator';
 import { SupportModel } from './SupportModel';
+import { FootSupportModel, StanceSupport } from './FootSupportModel';
 import { GripRules, HoverCandidate, FootSwapCandidate } from '../rules/GripRules';
 import { StaminaModel } from '../rules/StaminaModel';
 import { CrimpModel, CrimpSnapshot } from '../rules/CrimpModel';
@@ -22,7 +23,7 @@ import { FootReachModel } from '../rules/FootReachModel';
 
 export interface SimCommand {
   tick: number;
-  type: 'down' | 'move' | 'up' | 'drop' | 'reset' | 'crimp' | 'swap_key' | 'swap_confirm' | 'swap_cancel';
+  type: 'down' | 'move' | 'up' | 'drop' | 'reset' | 'crimp' | 'shake' | 'swap_key' | 'swap_confirm' | 'swap_cancel';
   limb?: LimbId;
   pos?: Vec2D;
   hand?: HandId;
@@ -50,6 +51,9 @@ export interface SimSnapshot {
   timeSeconds: number;
   sessionState: SessionState;
   reachLimited: FootId | null;
+  support: StanceSupport | null;
+  shake: { hand: HandId | null; active: boolean; recovering: boolean };
+  finish: { hands: number; progress: number };
   goals: { crimp: boolean; footSwaps: number; support: boolean; checkpoints: string[] };
 }
 
@@ -97,6 +101,13 @@ export class Simulation {
   private completedFootSwaps = 0;
   private checkpoints = new Set<string>();
   private reachLimited: FootId | null = null;
+  private stance: StanceSupport | null = null;
+  private footReachTimers: Record<FootId, number> = { leftFoot: 0, rightFoot: 0 };
+  private shakeRequested: HandId | null = null;
+  private shakeHand: HandId | null = null;
+  private recovering = false;
+  private finishTimer = 0;
+  private finishHands = 0;
 
   // Snapshot ring buffer (keep last 16 snapshots)
   private snapshots: SimSnapshot[] = [];
@@ -113,7 +124,7 @@ export class Simulation {
 
     // Initial torso placement: compute center of starting holds if any
     const initialPos = this.calculateInitialTorsoPos(level);
-    this.climber = new Climber(this.world, profile.physics, initialPos);
+    this.climber = new Climber(this.world, profile.physics, initialPos, !!profile.rules.realism);
 
     // Drag actuator
     this.dragActuator = new DragActuator(this.world, profile.physics.correctionFactor);
@@ -127,6 +138,7 @@ export class Simulation {
     // Attach limbs to start holds
     this.applyStartPositions();
     this.updateCrimpState(0);
+    this.updateStance();
 
     // Record initial snapshot
     this.recordSnapshot();
@@ -153,7 +165,7 @@ export class Simulation {
         count++;
       }
     }
-    return count > 0 ? { x: sumX / count, y: sumY / count } : { x: 0, y: 0 };
+    return count > 0 ? { x: sumX / count, y: sumY / count + (this.profile.rules.realism ? .85 : 0) } : { x: 0, y: 0 };
   }
 
   private applyStartPositions(): void {
@@ -232,6 +244,37 @@ export class Simulation {
       this.processCommand(cmd);
     }
 
+    this.updateStance();
+    if (this.stance && ['Playing','Finished'].includes(this.session.getState())) {
+      for (const foot of ['leftFoot', 'rightFoot'] as const) {
+        this.climber.torso.applyForce(this.stance.feet[foot].force, this.climber.getAnchorWorld(foot), true);
+      }
+      // Bounded active hip/core balance: torque is available only through useful loaded feet.
+      const weight = (this.profile.physics.torsoMass + 4.4 * this.profile.physics.endpointMass) * Math.abs(this.profile.physics.gravity[1]);
+      const cap = this.stance.footLoad * weight;
+      this.climber.torso.applyTorque(Math.max(-cap, Math.min(cap,
+        -160 * normalizeAngle(this.climber.getTorsoAngle()) - 28 * this.climber.torso.getAngularVelocity())), true);
+      // Bent arms can bear residual load before a rope becomes taut. Model their active
+      // support with a bounded force at each shoulder; a lone arm cannot replace all legs.
+      const secure = (['leftHand','rightHand'] as const).filter(hand => {
+        const limb = this.climber.getLimb(hand), hold = this.level.holds.find(h=>h.id===limb.holdId);
+        return limb.status === 'attached' && hold && ((hold.grip ?? 'jug') === 'jug' || this.crimp.isEngaged(hand)) &&
+          this.climber.getLimbPosition(hand).y > this.climber.getAnchorWorld('leftFoot').y + .3;
+      });
+      const dynamicMass = this.climber.torso.getMass() + Object.values(this.climber.limbs)
+        .filter(l=>l.status==='free'||l.status==='dragging').reduce((m,l)=>m+l.body.getMass(),0);
+      const usefulFeet = (['leftFoot','rightFoot'] as const).filter(f=>this.stance!.feet[f].quality>.1);
+      const targetY = usefulFeet.length ? usefulFeet.reduce((y,f)=>y+this.climber.getLimbPosition(f).y,0)/usefulFeet.length +
+        Math.abs(this.profile.physics.hip[1]) + this.profile.physics.legReach*.74 : this.climber.getTorsoPosition().y;
+      const needed = Math.max(0, dynamicMass * Math.abs(this.profile.physics.gravity[1]) - this.stance.footLoad * weight -
+        this.climber.torso.getLinearVelocity().y * 24 + (targetY-this.climber.getTorsoPosition().y)*80);
+      for (const hand of secure) {
+        const hold=this.level.holds.find(h=>h.id===this.climber.getLimb(hand).holdId)!;
+        const force=Math.min(needed / secure.length, weight * (hold.grip==='crimp' ? .45 : .68));
+        this.climber.torso.applyForce({x:0,y:force},this.climber.getAnchorWorld(hand),true);
+      }
+    }
+
     // 3. Update Drag Actuator and Capacity
     if (this.activeDraggedLimb && this.dragActuator.isDragging()) {
       const limbPos = this.climber.getLimbPosition(this.activeDraggedLimb);
@@ -245,7 +288,7 @@ export class Simulation {
         if (clamped.limited) this.reachLimited = foot;
       }
       const dragDir = vSub(actuatorTarget, limbPos);
-      const capacity = SupportModel.computeCapacity(
+      const capacity = this.movementCapacity(
         this.climber,
         this.activeDraggedLimb,
         dragDir,
@@ -281,6 +324,24 @@ export class Simulation {
       return;
     }
 
+    if (cmd.type === 'shake') {
+      if (!cmd.active) {
+        if (!cmd.hand || this.shakeRequested === cmd.hand) this.cancelShake();
+      } else if (cmd.hand && this.profile.rules.realism && this.session.isInteractive()) {
+        if (this.shakeHand && this.shakeHand !== cmd.hand) return;
+        this.shakeRequested = cmd.hand;
+        this.updateStance();
+        if (this.canRecover(cmd.hand)) {
+          const hold = this.climber.getLimb(cmd.hand).holdId;
+          this.climber.release(cmd.hand);
+          this.crimp.setIntent(cmd.hand, false);
+          this.shakeHand = cmd.hand;
+          this.session.emit({ type: 'Released', limb: cmd.hand, hold });
+        }
+      }
+      return;
+    }
+
     if (cmd.type === 'swap_cancel') {
       this.cancelFootSwap('cancelled');
       return;
@@ -307,6 +368,9 @@ export class Simulation {
       const targetPos = cmd.pos ?? { x: 0, y: 0 };
       const limbId = cmd.limb ?? this.pickLimb(targetPos);
       if (!limbId) return;
+      this.cancelShake();
+      const realism = this.profile.rules.realism;
+      if (realism) this.stamina.spend(limbId.endsWith('Hand') ? realism.handMoveCost : realism.footMoveCost);
 
       this.activeDraggedLimb = limbId;
       this.currentCursorPos = targetPos;
@@ -315,7 +379,7 @@ export class Simulation {
 
       const limbPos = this.climber.getLimbPosition(limbId);
       const dragDir = vSub(targetPos, limbPos);
-      const initialCapacity = SupportModel.computeCapacity(
+      const initialCapacity = this.movementCapacity(
         this.climber,
         limbId,
         dragDir,
@@ -495,7 +559,7 @@ export class Simulation {
     }
   }
 
-  private maybeFinish(): void {
+  private maybeFinish(dt = 0): void {
     if (this.session.getState() !== 'Playing') return;
     const finishHold = this.level.holds.find((hold) => hold.finish);
     if (!finishHold) return;
@@ -509,13 +573,16 @@ export class Simulation {
       this.profile.rules.finishRequires === 'two_hands'
         ? secureHands.length === 2
         : secureHands.length >= 1;
-    if (!finished) return;
-    if (this.level.goals?.crimpHold && !this.crimpGoalMet) return;
-    if (this.completedFootSwaps < (this.level.goals?.footSwaps ?? 0)) return;
-    if (this.level.goals?.checkpoints?.some(id=>!this.checkpoints.has(id))) return;
-    if (!this.hasFinishSupport()) return;
+    this.finishHands = secureHands.length;
+    const eligible = finished && this.stamina.getValue() > 0 && !this.shakeHand && !this.footSwap && (!this.level.goals?.crimpHold || this.crimpGoalMet) &&
+      this.completedFootSwaps >= (this.level.goals?.footSwaps ?? 0) &&
+      !this.level.goals?.checkpoints?.some(id=>!this.checkpoints.has(id)) && this.hasFinishSupport();
+    if (!eligible) { this.finishTimer = 0; return; }
+    this.finishTimer += dt;
+    if (this.finishTimer + 1e-9 < (this.profile.rules.finishEstablishSeconds ?? 0)) return;
 
     this.session.setState('Finished');
+    this.cancelShake();
     this.scoring.stopTimer();
     this.session.emit({ type: 'Finished', result: this.scoring.evaluateResult() });
   }
@@ -571,6 +638,24 @@ export class Simulation {
       return;
     }
 
+    if (this.session.getState() !== 'Playing') { this.cancelShake(); return; }
+
+    this.updateStance();
+    if (this.stance) {
+      for (const foot of ['leftFoot', 'rightFoot'] as const) {
+        if (this.climber.getLimb(foot).status === 'attached' && this.stance.feet[foot].reason === 'reach') {
+          this.footReachTimers[foot] += this.dt;
+          if (this.footReachTimers[foot] >= this.profile.rules.realism!.footReachGraceSeconds) {
+            const hold = this.climber.getLimb(foot).holdId;
+            this.climber.release(foot);
+            this.session.emit({ type: 'Released', limb: foot, hold });
+            this.footReachTimers[foot] = 0;
+          }
+        } else this.footReachTimers[foot] = 0;
+      }
+      this.updateStance();
+    }
+
     // 2. Per-hand crimp support. Attached endpoints are kinematic pins in this engine, so grip
     // quality is represented by whether that pin remains secure, not by a fictitious friction
     // multiplier. Jugs never enter this model.
@@ -583,7 +668,8 @@ export class Simulation {
           (hold.grip!=='crimp'||(limb.endsWith('Hand')&&this.crimp.isEngaged(limb as HandId)));
       })) this.checkpoints.add(id);
     }
-    this.maybeFinish();
+    this.maybeFinish(this.dt);
+    if (this.session.getState() !== 'Playing') return;
 
     // 3. Hands rule check
     if (this.session.getState() === 'Playing') {
@@ -649,7 +735,10 @@ export class Simulation {
     const totalMass = this.profile.physics.torsoMass + 4 * this.profile.physics.endpointMass;
     const gravity = Math.abs(this.profile.physics.gravity[1]);
 
-    const staminaEvent = this.stamina.update(
+    this.recovering = !!this.shakeHand && this.climber.getLimb(this.shakeHand).status === 'free' && this.canRecover(this.shakeHand);
+    const staminaEvent = this.profile.rules.realism ? this.stamina.updateRealism(this.dt, isDragging,
+      force / Math.max(1, totalMass * gravity), this.stance!.armLoad, this.climber.attachedHandsCount() === 1,
+      Number(this.crimp.isEngaged('leftHand')) + Number(this.crimp.isEngaged('rightHand')), this.recovering) : this.stamina.update(
       this.dt,
       isDragging,
       force,
@@ -657,7 +746,8 @@ export class Simulation {
       gravity
     );
 
-    if (staminaEvent === 'exhausted' && this.session.getState() === 'Playing') {
+    if ((staminaEvent === 'exhausted' || this.stamina.getValue() === 0) && this.session.getState() === 'Playing') {
+      this.cancelShake();
       this.session.emit({ type: 'Exhausted' });
       if (this.profile.rules.stamina.mode === 'fall') {
         this.cancelFootSwap('cancelled');
@@ -722,6 +812,9 @@ export class Simulation {
       timeSeconds: this.scoring.getTimeSeconds(),
       sessionState: this.session.getState(),
       reachLimited: this.reachLimited,
+      support: this.stance,
+      shake: { hand: this.shakeRequested, active: this.shakeHand !== null, recovering: this.recovering },
+      finish: { hands: this.finishHands, progress: Math.min(1, this.finishTimer / Math.max(this.dt, this.profile.rules.finishEstablishSeconds ?? this.dt)) },
       goals: { crimp: this.crimpGoalMet, footSwaps: this.completedFootSwaps, support: this.hasFinishSupport(), checkpoints: [...this.checkpoints] },
     };
 
@@ -811,6 +904,9 @@ export class Simulation {
       timeSeconds: s1.timeSeconds,
       sessionState: s1.sessionState,
       reachLimited: s1.reachLimited,
+      support: s1.support,
+      shake: s1.shake,
+      finish: s1.finish,
       goals: { ...s1.goals },
     };
   }
@@ -871,6 +967,10 @@ export class Simulation {
     this.completedFootSwaps = 0;
     this.checkpoints.clear();
     this.reachLimited = null;
+    this.cancelShake();
+    this.finishTimer = 0;
+    this.finishHands = 0;
+    this.footReachTimers = { leftFoot: 0, rightFoot: 0 };
     this.queuedCommands = [];
 
     // Reset torso
@@ -887,6 +987,7 @@ export class Simulation {
     this.stamina.reset();
     this.crimp.reset();
     this.updateCrimpState(0);
+    this.updateStance();
     this.scoring.reset();
     this.session.setState('Playing');
     this.session.emit({ type: 'Reset' });
@@ -895,13 +996,41 @@ export class Simulation {
   }
 
   private hasFinishSupport(): boolean {
+    if (this.profile.rules.realism && (!this.stance || this.stance.footLoad < this.profile.rules.realism.finishMinFootLoad)) return false;
     if (!this.level.finishSupportHold) return true;
     return (['leftFoot', 'rightFoot'] as FootId[]).some((foot) => {
       const limb = this.climber.getLimb(foot);
       return limb.status === 'attached' && limb.holdId === this.level.finishSupportHold &&
+        (!this.stance || this.stance.feet[foot].load > .03) &&
         FootReachModel.canReach(foot, this.climber.getLimbPosition(foot), this.climber.getAnchorWorld(foot),
           this.climber.getTorsoAngle(), this.profile.physics.legReach, this.level.movement);
     });
   }
+
+  private updateStance(): void {
+    this.stance = this.profile.rules.realism ? FootSupportModel.evaluate(this.climber, this.level, this.profile.rules.realism) : null;
+  }
+
+  private movementCapacity(climber: Climber, limb: LimbId, direction: Vec2D, physics: ProfileConfig['physics']): number {
+    if (!this.stance) return SupportModel.computeCapacity(climber, limb, direction, physics);
+    const hands = (['leftHand', 'rightHand'] as const).filter(h => h !== limb && climber.getLimb(h).status === 'attached').length;
+    const weight = (physics.torsoMass + 4.4 * physics.endpointMass) * Math.abs(physics.gravity[1]);
+    // Useful legs increase available movement force; ineffective toe pins do not.
+    return Math.min(physics.forceCeilingG * weight, weight * (.7 * hands + 1.8 * this.stance.footLoad));
+  }
+
+  private canRecover(hand: HandId): boolean {
+    const cfg = this.profile.rules.realism;
+    if (!cfg || !this.stance || this.activeDraggedLimb || this.footSwap) return false;
+    const other = hand === 'leftHand' ? 'rightHand' : 'leftHand';
+    const contact = this.climber.getLimb(other);
+    const hold = this.level.holds.find(h => h.id === contact.holdId);
+    const velocity = this.climber.torso.getLinearVelocity();
+    return contact.status === 'attached' && !!hold && (hold.grip ?? 'jug') === 'jug' &&
+      this.stance.footLoad >= cfg.restMinFootLoad && this.stance.balanced &&
+      Math.hypot(velocity.x, velocity.y) <= cfg.restMaxSpeed && Math.abs(this.climber.torso.getAngularVelocity()) < 1.2;
+  }
+
+  private cancelShake(): void { this.shakeRequested = null; this.shakeHand = null; this.recovering = false; }
 
 }

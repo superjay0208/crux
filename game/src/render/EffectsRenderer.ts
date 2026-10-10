@@ -18,61 +18,7 @@ export class EffectsRenderer {
 
   render(ctx: CanvasRenderingContext2D, camera: Camera, snap: SimSnapshot): void {
     this.renderContacts(ctx, camera, snap);
-    if (!snap.staminaVisible || snap.stamina >= 1.0) {
-      return;
-    }
-
-    const scale = camera.getScale();
-    const torsoScreen = camera.worldToScreen(snap.torso.pos);
-    const torsoAngle = -snap.torso.angle;
-
-    // Hip position in torso frame
-    const hipX = -0.28;
-    const hipY = -0.25;
-
-    const cosA = Math.cos(torsoAngle);
-    const sinA = Math.sin(torsoAngle);
-    const wheelScreenX = torsoScreen.x + (hipX * cosA - (-hipY) * sinA) * scale;
-    const wheelScreenY = torsoScreen.y + (hipX * sinA + (-hipY) * cosA) * scale;
-
-    const r = (11 / 72) * scale;
-    const strokeW = (4.5 / 72) * scale;
-
-    // Color interpolation: green -> yellow -> orange -> red
-    const val = snap.stamina;
-    let color = '#5CB870';
-    if (val < 0.15) {
-      color = '#C8323B';
-    } else if (val < 0.40) {
-      color = '#E0602A';
-    } else if (val < 0.65) {
-      color = '#E6D33A';
-    } else {
-      color = '#5CB870';
-    }
-
-    ctx.save();
-    ctx.translate(wheelScreenX, wheelScreenY);
-    ctx.rotate(torsoAngle);
-
-    // Background track (semi-transparent dark)
-    ctx.beginPath();
-    ctx.arc(0, 0, r, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40, 30, 20, 0.25)';
-    ctx.lineWidth = strokeW;
-    ctx.stroke();
-
-    // Active stamina arc empties clockwise from 12 o'clock (-PI / 2)
-    ctx.beginPath();
-    const startAngle = -Math.PI / 2;
-    const endAngle = startAngle + snap.stamina * Math.PI * 2;
-    ctx.arc(0, 0, r, startAngle, endAngle, false);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = strokeW;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-
-    ctx.restore();
+    // The reserve ring is DOM-rendered at the hip for stable readable size at every zoom.
   }
 
   clear(): void { this.bursts = []; }
@@ -88,6 +34,19 @@ export class EffectsRenderer {
   private renderContacts(ctx: CanvasRenderingContext2D, camera: Camera, snap: SimSnapshot): void {
     ctx.save();
     const scale = camera.getScale();
+    if (snap.support) for (const foot of ['leftFoot','rightFoot'] as const) {
+      if (snap.limbs[foot].status !== 'attached') continue;
+      const load = snap.support.feet[foot], p = camera.worldToScreen(snap.limbs[foot].pos);
+      ctx.strokeStyle = load.load > .03 ? '#8cdec1' : '#ffb86b'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(p.x,p.y,Math.max(9,.17*scale),0,Math.PI*2); ctx.stroke();
+      if (load.load > .03) { ctx.beginPath(); ctx.moveTo(p.x,p.y+9); ctx.lineTo(p.x,p.y+9+load.load*18); ctx.stroke(); }
+    }
+    if (snap.shake.hand && snap.shake.active) {
+      const p = camera.worldToScreen(snap.limbs[snap.shake.hand].pos);
+      const offset = this.reducedMotion ? 0 : Math.sin(snap.tick*.45)*3;
+      ctx.strokeStyle = snap.shake.recovering ? '#8cdec1' : '#ffb86b'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(p.x+offset,p.y,13,Math.PI*.15,Math.PI*1.85); ctx.stroke();
+    }
     if (snap.reachLimited && this.level?.movement) {
       const foot=snap.reachLimited;
       const angle=snap.torso.angle;

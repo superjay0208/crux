@@ -548,7 +548,7 @@
     "rightFoot": "left_foot"
   },
   "targets": {
-    "moves": 10,
+    "moves": 11,
     "timeSeconds": null,
     "elimination": null
   },

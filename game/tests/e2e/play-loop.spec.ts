@@ -5,6 +5,9 @@ test('isolated lab finishes after the actual limb reaches the target',async({pag
   await page.goto('/?level=lab');await ready(page);
   await drag(page,'rightHand','h1');
   await expect(page.locator('#hud-moves-val')).toHaveText('1');
+  await expect(page.locator('#hud-completion')).toBeHidden();
+  await drag(page,'leftHand','h1');
+  await expect(page.locator('#hud-moves-val')).toHaveText('2');
   await expect(page.locator('#hud-completion')).toBeVisible();
   await expect(page.locator('.completion-level-name')).toHaveText('LAB');
 });

@@ -14,7 +14,7 @@
     "sim": "tsx scripts/sim-cli.ts",
     "levels:check": "tsx scripts/levels-check.ts",
     "campaign:build": "node scripts/build-campaign.mjs",
-    "campaign:check": "tsx scripts/validate-campaign.ts",
+    "campaign:check": "tsx scripts/validate-campaign.ts && tsx scripts/validate-campaign.ts --realism",
     "launch": "node scripts/launch.mjs",
     "launch:stop": "node scripts/launch.mjs --stop"
   },

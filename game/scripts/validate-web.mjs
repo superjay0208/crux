@@ -34,21 +34,37 @@ try {
   await page.getByTestId('start-play').click();await page.locator('[data-level-id="first_light"]').click();
   await page.waitForFunction(()=>Boolean(window.__crux?.facade));
   await page.waitForTimeout(150);
-  const points=await page.evaluate(()=>{
-    const f=window.__crux.facade,s=f.getSimulation(),hold=s.level.holds.find(h=>h.finish);
-    return {start:f.getCamera().worldToScreen(s.climber.getLimbPosition('rightHand')),end:f.getCamera().worldToScreen({x:hold.pos[0],y:hold.pos[1]})};
-  });
-  await page.mouse.move(points.start.x,points.start.y);await page.mouse.down();
-  await page.mouse.move(points.end.x,points.end.y,{steps:24});
-  await page.waitForFunction(()=>window.__crux.facade.getSimulation().getLatestSnapshot().hoverCandidateHoldId==='top');
-  await page.mouse.up();await page.locator('#hud-completion').waitFor();
+  const drag=async(limb,holdId)=>{
+    const start=await page.evaluate(limb=>{
+      const f=window.__crux.facade;return f.getCamera().worldToScreen(f.getSimulation().climber.getLimbPosition(limb));
+    },limb);
+    await page.mouse.move(start.x,start.y);await page.mouse.down();
+    for(let i=1;i<=24;i++){
+      const end=await page.evaluate(id=>{const f=window.__crux.facade,h=f.getSimulation().level.holds.find(h=>h.id===id);return f.getCamera().worldToScreen({x:h.pos[0],y:h.pos[1]});},holdId);
+      const t=i/24;await page.mouse.move(start.x+(end.x-start.x)*t,start.y+(end.y-start.y)*t);await page.waitForTimeout(16);
+    }
+    await page.waitForFunction(id=>window.__crux.facade.getSimulation().getLatestSnapshot().hoverCandidateHoldId===id,holdId,{timeout:3000});
+    await page.mouse.up();await page.waitForTimeout(80);
+  };
+  await drag('rightHand','top');
+  if(await page.locator('#hud-completion').isVisible())throw new Error('Single-hand finish was accepted.');
+  await drag('leftHand','top');await page.locator('#hud-completion').waitFor();
   await page.reload();await page.getByTestId('start-play').click();
   if(await page.locator('[data-level-id="thin_edge"]').isDisabled())throw new Error('Web save progression failed.');
+  await page.getByTestId('mode-realism').click();
+  if(!(await page.locator('[data-level-id="thin_edge"]').isDisabled()))throw new Error('Mode progress leaked into realism.');
+  await page.locator('[data-level-id="first_light"]').click();await page.waitForFunction(()=>Boolean(window.__crux?.facade));
+  await page.waitForTimeout(250);
+  const recipe=JSON.parse(await fs.readFile('tests/realism-recipes.json','utf8')).find(r=>r.id==='first_light');
+  for(const step of recipe.steps){await drag(step.limb,step.hold);if(step.limb.endsWith('Foot'))await page.waitForTimeout(700);}
+  await page.locator('#hud-completion').waitFor();
+  const real=await page.evaluate(()=>window.__crux.facade.getSimulation().getLatestSnapshot());
+  if(real.finish.hands!==2||real.support.footLoad<.15)throw new Error('Realism finish lacks useful support.');
   await page.goto(`${url}?level=crux`);await page.waitForFunction(()=>Boolean(window.__crux?.facade));
   const fonts=await page.evaluate(async()=>{await document.fonts.load('16px "Barlow Condensed"');return document.fonts.check('16px "Barlow Condensed"');});
   if(!fonts||errors.length||failed.length)throw new Error(JSON.stringify({fonts,errors,failed}));
-  const output='../validation/web-polish-2026-10-09';await fs.mkdir(output,{recursive:true});
+  const output='../validation/fatigue-realism-2026-10-09/browser';await fs.mkdir(output,{recursive:true});
   await page.screenshot({path:`${output}/${urlArg?'live':'subpath'}-crux.png`});
-  await fs.writeFile(`${output}/${urlArg?'live':'subpath'}-results.json`,JSON.stringify({url,fonts,errors,failed,completed:true},null,2));
-  console.log(`PASS ${url}: demo, real first-route input, save/reload, direct level, JSON and fonts.`);
+  await fs.writeFile(`${output}/${urlArg?'live':'subpath'}-results.json`,JSON.stringify({url,fonts,errors,failed,completed:true,realismCompleted:true,footLoad:real.support.footLoad},null,2));
+  console.log(`PASS ${url}: demo, two-hand finishes in both modes, independent saves, direct level, JSON and fonts.`);
 }finally{await browser.close();if(server)await new Promise(resolve=>server.close(resolve));}

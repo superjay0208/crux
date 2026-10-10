@@ -77,6 +77,19 @@ button:focus-visible { outline: 2px solid var(--mint); outline-offset: 4px; }
 .start-play { display:flex; justify-content:space-between; align-items:center; width:190px; border:1px solid var(--mint); background:var(--mint); color:#173430; border-radius:6px; padding:12px 20px; font-size:23px; letter-spacing:3px; }
 .start-play:hover { background:#b0edcf; }
 .start-controls { margin-top:18px; border:0; background:transparent; color:#aebfbe; font-size:16px; }
+.mode-switch { display:flex; gap:3px; border:1px solid #536c73; border-radius:6px; padding:3px; width:max-content; margin-bottom:18px; }
+.mode-switch button { background:transparent; border:0; color:#aebfbe; padding:7px 13px; border-radius:3px; font-size:15px; }
+.mode-switch button[aria-pressed='true'] { background:#39534e; color:#b1efd3; }
+.menu-actions .mode-switch { margin-left:auto; margin-bottom:8px; }
+.fatigue-ring { width:46px; height:46px; color:var(--reserve-color); filter:drop-shadow(0 1px 4px #101b25); }
+.fatigue-ring svg { width:100%; height:100%; }
+.fatigue-reserve { fill:none; stroke:var(--reserve-color); stroke-width:5; stroke-linecap:round; }
+.fatigue-value { position:absolute; inset:0; display:grid; place-items:center; font-size:13px; font-weight:600; }
+.fatigue-ring[data-warning='true'] svg { animation:grip-shake .16s linear infinite; }
+.fatigue-ring[data-recovering='true'] { color:var(--mint); }
+.shake-indicator { width:42px; height:42px; border-radius:50%; border:1px solid #ad784f; background:#182630d9; color:var(--amber); display:grid; place-items:center; font-size:18px; }
+.shake-indicator[data-recovering='true'] { color:var(--mint); border-color:var(--mint); }
+@media(prefers-reduced-motion:reduce) { .fatigue-ring[data-warning='true'] svg { animation:none; } }
 .start-control-copy { margin-top:12px; font-size:16px; line-height:1.6; color:#adbfbc; }
 .start-demo-label { position:absolute; bottom:26px; right:30px; color:#7b999d; letter-spacing:2px; font-size:11px; }
 .start-demo-label span { display:block; color:#b6cfca; margin-top:4px; }

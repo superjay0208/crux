@@ -52,6 +52,28 @@ export async function landGreen(page:Page,click=false):Promise<void> {
 export async function runRecipe(page:Page,steps:Array<{limb:LimbId;hold:string;crimp?:boolean;swap?:boolean}>):Promise<void>{
   const held=new Set<string>();
   for(const step of steps){
+    const state=await page.evaluate(limb=>{
+      const sim=(window as any).__crux.facade.getSimulation(),snap=sim.getLatestSnapshot();
+      const other=limb==='leftHand'?'rightHand':'leftHand';
+      const hold=sim.level.holds.find((h:any)=>h.id===snap.limbs[other].holdId);
+      return{realism:!!sim.profile.rules.realism,reserve:snap.stamina,
+        rest:limb.endsWith('Hand')&&hold?.grip==='jug'&&snap.limbs[other].status==='attached'&&(snap.support?.footLoad??0)>.25};
+    },step.limb);
+    if(!state.realism&&state.reserve<.7) {
+      await page.waitForFunction(()=>{
+        const snap=(window as any).__crux.facade.getSimulation().getLatestSnapshot();
+        return snap.stamina>=.95||Object.values(snap.crimp).some((h:any)=>h.onCrimp&&h.availableSeconds<1.4)||snap.sessionState!=='Playing';
+      },undefined,{timeout:6000});
+    }
+    if(state.realism&&state.reserve<.6&&state.rest) {
+      const gripKey=step.limb==='leftHand'?'q':'e',shakeKey=step.limb==='leftHand'?'z':'c';
+      await page.keyboard.up(gripKey);held.delete(gripKey);
+      await page.waitForTimeout(1000);
+      await page.keyboard.down(shakeKey);
+      await page.waitForFunction(()=>(window as any).__crux.facade.getSimulation().getLatestSnapshot().shake.active,undefined,{timeout:1000});
+      await page.waitForFunction(()=>(window as any).__crux.facade.getSimulation().getLatestSnapshot().stamina>=.92,undefined,{timeout:20000});
+      await page.keyboard.up(shakeKey);
+    }
     if(step.limb.endsWith('Hand')){
       const key=step.limb==='leftHand'?'q':'e';
       if(step.crimp){await page.keyboard.down(key);held.add(key);}
@@ -59,8 +81,12 @@ export async function runRecipe(page:Page,steps:Array<{limb:LimbId;hold:string;c
     }
     await drag(page,step.limb,step.hold);
     if(step.swap)await landGreen(page);
-    await page.waitForTimeout(65);
+    await page.waitForTimeout(state.realism&&step.limb.endsWith('Foot')?700:65);
   }
-  await expect(page.locator('#hud-completion')).toBeVisible();
+  try { await expect(page.locator('#hud-completion')).toBeVisible(); }
+  catch(error) {
+    const snap=await page.evaluate(()=>(window as any).__crux.facade.getSimulation().getLatestSnapshot());
+    throw new Error(`Route did not establish: ${JSON.stringify(snap)}`,{cause:error});
+  }
   for(const key of held)await page.keyboard.up(key);
 }

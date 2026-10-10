@@ -64,10 +64,11 @@ describe('Rules Tests R-01...R-10', () => {
   });
 
   // R-03 Finish condition
-  it('R-03: Finish condition - original needs one hand, desktop needs two hands', () => {
-    // Original profile: 1 hand on finish hold
+  it('R-03: both profiles require two hands on the finish hold', () => {
     const simOrig = new Simulation(labLevel, profileOriginal);
     simOrig.climber.attach('rightHand', 'h1', { x: 0.4, y: 1.2 });
+    expect(GripRules.checkFinishCondition(simOrig.climber, labLevel, profileOriginal)).toBe(false);
+    simOrig.climber.attach('leftHand','h1',{x:.4,y:1.2});
     expect(GripRules.checkFinishCondition(simOrig.climber, labLevel, profileOriginal)).toBe(true);
 
     // Desktop profile: 1 hand is not enough, needs both hands
@@ -110,18 +111,18 @@ describe('Rules Tests R-01...R-10', () => {
     expect(stamina.getValue()).toBe(1.0);
 
     const dt = 1 / 120;
-    // Drag for 1 second with 0 effort -> drain rate is drainBase = 0.16/s
+    // One second costs 30% before additional movement effort.
     for (let i = 0; i < 120; i++) {
       stamina.update(dt, true, 0, 10, 12);
     }
-    expect(stamina.getValue()).toBeCloseTo(0.84, 2);
+    expect(stamina.getValue()).toBeCloseTo(.7, 2);
     expect(stamina.getIsVisible()).toBe(true);
 
-    // Idle for 0.5s with 1.6/s refill -> refills to 1.0
+    // Half a second restores just 11%, not a full reset.
     for (let i = 0; i < 60; i++) {
       stamina.update(dt, false, 0, 10, 12);
     }
-    expect(stamina.getValue()).toBe(1.0);
+    expect(stamina.getValue()).toBeCloseTo(.81, 2);
 
     // Exhaustion test
     let event: any = null;

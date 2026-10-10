@@ -75,7 +75,8 @@ export class GameFacade {
         onSwapConfirm: () => this.sim.enqueueCommand({ tick: this.sim.getTick(), type: 'swap_confirm' }),
       },
       this.level.holds.some((hold) => hold.grip === 'crimp'),
-      this.level
+      this.level,
+      !!this.profile.rules.realism
     );
 
     this.sim.session.addListener((event) => {
@@ -97,7 +98,13 @@ export class GameFacade {
     this.handleResize = this.handleResize.bind(this);
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
+    document.addEventListener('visibilitychange', this.handleVisibility);
   }
+
+  private handleVisibility = (): void => {
+    this.lastTime = performance.now();
+    if (document.hidden) { this.pointerInput.cancelActive(); this.keyboardInput.cancelActive(); }
+  };
 
   getSimulation(): Simulation {
     return this.sim;
@@ -174,7 +181,7 @@ export class GameFacade {
     this.lastTime = now;
 
     // Step fixed simulation
-    this.sim.update(dt);
+    if (!document.hidden) this.sim.update(dt);
 
     // Render interpolated frame
     this.render();
@@ -228,6 +235,7 @@ export class GameFacade {
     this.pointerInput.dispose();
     this.keyboardInput.dispose();
     window.removeEventListener('resize', this.handleResize);
+    document.removeEventListener('visibilitychange', this.handleVisibility);
     this.hud.destroy();
   }
 }

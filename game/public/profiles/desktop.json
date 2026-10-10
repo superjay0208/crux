@@ -47,9 +47,11 @@
     "stamina": {
       "mode": "cancel_drag",
       "drainPerSecond": 0.2,
-      "refillPerSecond": 1.6,
+      "refillPerSecond": 0.22,
       "drainWhile": "dragging",
-      "fadeOutSeconds": 0.4
+      "fadeOutSeconds": 0.4,
+      "drainBase": 0.3,
+      "effortGain": 0.65
     },
     "moveCounting": {
       "returnToSameHoldCounts": false,
@@ -60,18 +62,19 @@
     "dropLimbAction": "right_click",
     "rightClickSwap": false,
     "crimp": {
-      "drainPerSecond": 0.1666667,
-      "recoverPerSecond": 0.25,
-      "openGripGraceSeconds": 0.75,
-      "reengageFraction": 0.15
+      "drainPerSecond": 0.25,
+      "recoverPerSecond": 0.16,
+      "openGripGraceSeconds": 0.4,
+      "reengageFraction": 0.2
     },
     "footSwap": {
       "enabled": true,
-      "windowSeconds": 3.6,
-      "revolutionsPerSecond": 0.55,
+      "windowSeconds": 2.4,
+      "revolutionsPerSecond": 0.8,
       "targetCenter": 0.5,
-      "targetWidth": 0.22
-    }
+      "targetWidth": 0.14
+    },
+    "finishEstablishSeconds": 0.35
   },
   "visual": {
     "wall": "facets",

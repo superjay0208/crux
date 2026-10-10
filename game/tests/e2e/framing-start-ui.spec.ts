@@ -12,7 +12,7 @@ test('start demos animate, cycle, never save completions, and stop after navigat
   const tick=Number(await page.locator('.start-screen').getAttribute('data-demo-tick'));
   await page.waitForTimeout(300);
   expect(Number(await page.locator('.start-screen').getAttribute('data-demo-tick'))).toBeGreaterThan(tick);
-  await page.waitForFunction(()=>document.querySelector('[data-testid="demo-route"]')?.textContent==='CROSSOVER',undefined,{timeout:12000});
+  await page.waitForFunction(()=>document.querySelector('[data-testid="demo-route"]')?.textContent==='CROSSOVER',undefined,{timeout:30000});
   expect(await page.evaluate(()=>localStorage.getItem('crux.save.v2'))).toBeNull();
   await page.evaluate(()=>{(window as any).__oldDemo=document.querySelector('.start-screen');});
   await page.getByTestId('start-play').click();

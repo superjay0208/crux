@@ -36,7 +36,7 @@ async function main() {
   if (!fs.existsSync(levelPath)) {
     levelPath = path.resolve(
       process.cwd(),
-      `public/levels/original/${replay.levelId}.json`
+      `public/levels/${replay.profile==='realism'?'realism':'original'}/${replay.levelId}.json`
     );
   }
   if (!fs.existsSync(levelPath)) {

@@ -8,13 +8,17 @@ const read=(path:string)=>JSON.parse(fs.readFileSync(path,'utf8'));
 const profile=LevelLoader.validateProfile(read('public/profiles/original_browser.json'));
 
 describe('whole-body framing',()=>{
+  for(const mode of ['original','realism']) {
+    const frameProfile=mode==='original'?profile:LevelLoader.validateProfile(read('public/profiles/realism.json'));
+    const recipePath=mode==='original'?'tests/campaign-recipes.json':'tests/realism-recipes.json';
+    const replayFolder=mode==='original'?'campaign':'realism';
   for(const [w,h,dpr] of [[1280,720,1],[1012,1050,1.25],[640,360,2],[1920,800,1]]) {
-    it(`contains all authored replay poses and preserves input mapping at ${w}x${h} / ${dpr}`,()=>{
-      const renderer=new ClimberRenderer(profile);
-      for(const {id} of read('tests/campaign-recipes.json')) {
-        const level=LevelLoader.validateLevel(read(`public/levels/original/${id}.json`));
-        const replay=read(`tests/replays/campaign/${id}.json`);
-        const sim=new Simulation(level,profile),camera=new Camera();
+    it(`${mode} contains all authored replay poses and preserves input mapping at ${w}x${h} / ${dpr}`,()=>{
+      const renderer=new ClimberRenderer(frameProfile);
+      for(const {id} of read(recipePath)) {
+        const level=LevelLoader.validateLevel(read(`public/levels/${mode}/${id}.json`));
+        const replay=read(`tests/replays/${replayFolder}/${id}.json`);
+        const sim=new Simulation(level,frameProfile),camera=new Camera();
         camera.updateViewport(w,h,level.camera,dpr);
         sim.enqueueCommands(replay.commands.map((c:any)=>({...c,pos:c.pos?{x:c.pos[0],y:c.pos[1]}:undefined})));
         for(let tick=0;tick<=replay.commands.at(-1).tick+10;tick++) {
@@ -33,6 +37,7 @@ describe('whole-body framing',()=>{
         }
       }
     });
+  }
   }
   it('keeps dangling legs visible while both hands support the climber',()=>{
     const level=LevelLoader.validateLevel(read('public/levels/original/first_light.json'));
@@ -55,6 +60,9 @@ describe('route checkpoints',()=>{
     sim.climber.attach('rightHand',top.id,{x:top.pos[0],y:top.pos[1]});sim.stepTick();
     expect(sim.session.getState()).toBe('Playing');
     sim.climber.attach('leftHand',edge.id,{x:edge.pos[0],y:edge.pos[1]});sim.stepTick();
+    expect(sim.session.getState()).toBe('Playing');
+    sim.climber.attach('leftHand',top.id,{x:top.pos[0],y:top.pos[1]});
+    for(let tick=0;tick<42;tick++)sim.stepTick();
     expect(sim.session.getState()).toBe('Finished');expect(sim.getLatestSnapshot().goals.checkpoints).toEqual(['edge']);
     sim.reset();expect(sim.getLatestSnapshot().goals.checkpoints).toEqual([]);
   });

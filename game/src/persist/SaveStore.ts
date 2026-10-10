@@ -1,3 +1,5 @@
+import { ProfileId } from '../core/data/schema';
+
 export interface LevelRecord {
   bestMoves: number | null;
   bestTimeSeconds: number | null;
@@ -8,6 +10,7 @@ export interface LevelRecord {
 export interface SaveData {
   schemaVersion: number;
   profiles: {
+    realism: { levels: Record<string, LevelRecord> };
     original_browser: {
       levels: Record<string, LevelRecord>;
     };
@@ -41,8 +44,9 @@ export class SaveStore {
 
   private getDefaultData(): SaveData {
     return {
-      schemaVersion: 1,
+      schemaVersion: 2,
       profiles: {
+        realism: { levels: {} },
         original_browser: {
           levels: {
             threp: {
@@ -98,7 +102,12 @@ export class SaveStore {
       if (!raw.profiles) raw.profiles = this.getDefaultData().profiles;
       if (!raw.settings) raw.settings = this.getDefaultData().settings;
     }
-    return raw as SaveData;
+    const defaults = this.getDefaultData();
+    return { schemaVersion: 2, profiles: {
+      original_browser: { levels: raw.profiles?.original_browser?.levels ?? defaults.profiles.original_browser.levels },
+      desktop: { ...defaults.profiles.desktop, ...raw.profiles?.desktop, levels: raw.profiles?.desktop?.levels ?? {} },
+      realism: { levels: raw.profiles?.realism?.levels ?? {} },
+    }, settings: { ...defaults.settings, ...raw.settings } };
   }
 
   save(): void {
@@ -111,12 +120,12 @@ export class SaveStore {
     }
   }
 
-  getLevelRecord(profileId: 'original_browser' | 'desktop', levelId: string): LevelRecord | null {
+  getLevelRecord(profileId: ProfileId, levelId: string): LevelRecord | null {
     const profileLevels = this.data.profiles[profileId]?.levels;
     return profileLevels ? profileLevels[levelId] ?? null : null;
   }
 
-  isLevelUnlocked(profileId: 'original_browser' | 'desktop', levelId: string, levelOrder: number): boolean {
+  isLevelUnlocked(profileId: ProfileId, levelId: string, levelOrder: number): boolean {
     if (profileId === 'desktop') return true; // All groups open in desktop
     if (levelId === 'lab' || levelOrder <= 1) return true;
 
@@ -127,12 +136,12 @@ export class SaveStore {
     if (idx === 0) return true;
 
     const prevLevelId = orderedIds[idx - 1];
-    const prevRecord = this.getLevelRecord('original_browser', prevLevelId);
+    const prevRecord = this.getLevelRecord(profileId, prevLevelId);
     return prevRecord ? prevRecord.completed : false;
   }
 
   recordCompletion(
-    profileId: 'original_browser' | 'desktop',
+    profileId: ProfileId,
     levelId: string,
     moves: number,
     timeSeconds: number,
@@ -164,6 +173,9 @@ export class SaveStore {
   exportJson(): string {
     return JSON.stringify(this.data, null, 2);
   }
+
+  getSelectedProfile(): ProfileId { return this.data.settings.profile === 'realism' ? 'realism' : 'original_browser'; }
+  setSelectedProfile(profile: ProfileId): void { this.data.settings.profile = profile; this.save(); }
 
   importJson(jsonText: string): boolean {
     try {

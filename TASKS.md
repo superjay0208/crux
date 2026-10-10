@@ -1,6 +1,16 @@
 # Crux task tracker
 
-Current polish plan: [docs/12-framing-demo-and-web-release.md](docs/12-framing-demo-and-web-release.md).
+Current plan: [docs/15-fatigue-and-realism-mode.md](docs/15-fatigue-and-realism-mode.md).
+
+- [x] F0 Inspect resource/contact rules; research biomechanics; write execution plan.
+- [x] F1 Harder standard fatigue/crimp/wheel and established two-hand finishes.
+- [x] F2 Geometric foot loading and compressive leg support in realism.
+- [x] F3 Persistent fatigue and qualified one-arm shake recovery.
+- [x] F4 Mode selection, separate saves, minimal indicators, twelve realism variants.
+- [x] F5 Complete physics/replay and production browser validation for both modes.
+- [ ] F6 Visual review, local launcher, web deployment and live verification.
+
+Prior completed polish:
 
 - [x] S0 Inspect build and research framing, UI and GitHub Pages; write execution plan.
 - [x] S1 Smaller view and whole-body containment during active climbing.
@@ -13,8 +23,8 @@ Current polish plan: [docs/12-framing-demo-and-web-release.md](docs/12-framing-d
 Publishing status: [game live](https://superjay0208.github.io/crux/) and [repository created](https://github.com/superjay0208/crux).
 GitHub Linux/Chromium build and deployment passed. Public URL gameplay/save/assets smoke passed.
 Portfolio game card deployed and verified; original course dropdown still works.
-All requested polish/release tasks complete. Optional future work is listed below.
-Local checks: 70 unit tests, 32 production browser tests, all 12 solutions/replays, and project-path smoke pass.
+Previous polish/release tasks are complete. Current fatigue/realism release gates are F5/F6 above.
+Previous release checks: 70 unit tests, 32 production browser tests, all 12 solutions/replays, and project-path smoke passed.
 
 Previous completed request: independent identity and style; progressive grip/swap campaign; constrained crossed-foot
 reach; spinning green-zone QTE; contact effects; detailed research and validation.
@@ -33,15 +43,17 @@ Plan: [docs/11-crux-campaign-and-timing-plan.md](docs/11-crux-campaign-and-timin
 
 1. Level 1 jugs; level 2 secure-crimp checkpoint; level 3 foot swap and exit support; levels 4–12 combine
    all mechanics, with mirrored stances and reach changes. Practice is always unlocked.
-2. Q/E independently drain about six seconds of reserve. Full crimp secures an edge; key release or
+2. Q/E independently drain four seconds of reserve in Standard and five in Realism. Full crimp secures an edge; key release or
    exhaustion enters a short grace period before slip. Jugs recover reserve.
 3. Foot range rotates with the torso and is shortened smoothly across the hip. The same envelope
    clamps pointer targets, rejects impossible contacts and draws the reach guide.
-4. Swap wheel rotates at 0.55 turns/second over a 3.6-second deadline. One Space/click confirmation
+4. Swap wheel rotates at 0.8 turns/second over a 2.4-second deadline, with a 0.14-turn green sector. One Space/click confirmation
    succeeds in green. Miss/timeout/cancel keeps outgoing support; success transfers in one command.
 5. Parked incoming foot has no rope joint during timing, so it cannot accidentally add physical support.
 6. Contact rings, chalk dust, crimp halos/finger marks, swap sound/result feedback; reduced motion
    suppresses decorative particles. Retry/back/blur clear input safely.
+7. Both hands establish TOP for 0.35 seconds. Realism uses compressive foot loading, persistent
+   reserve, supported Z/C jug rests, separate progress, and twelve upward-footwork variants.
 
 ## Follow-up after this playable slice
 

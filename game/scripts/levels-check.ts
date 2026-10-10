@@ -68,7 +68,8 @@ async function main() {
   );
 
   const origDir = path.resolve(process.cwd(), 'public/levels/original');
-  const origErrors = checkDirectory(origDir, profileOriginal);
+  const realismProfile = LevelLoader.validateProfile(JSON.parse(fs.readFileSync('public/profiles/realism.json','utf8')));
+  const origErrors = checkDirectory(origDir, profileOriginal) + checkDirectory(path.resolve('public/levels/realism'), realismProfile);
 
   if (origErrors > 0) {
     console.error(`Validation failed with ${origErrors} error(s).`);

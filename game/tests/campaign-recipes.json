@@ -5,6 +5,10 @@
       {
         "limb": "rightHand",
         "hold": "top"
+      },
+      {
+        "limb": "leftHand",
+        "hold": "top"
       }
     ]
   },
@@ -18,6 +22,10 @@
       },
       {
         "limb": "rightHand",
+        "hold": "top"
+      },
+      {
+        "limb": "leftHand",
         "hold": "top"
       }
     ]
@@ -36,6 +44,10 @@
       },
       {
         "limb": "rightHand",
+        "hold": "top"
+      },
+      {
+        "limb": "leftHand",
         "hold": "top"
       }
     ]
@@ -67,6 +79,10 @@
       },
       {
         "limb": "rightHand",
+        "hold": "top"
+      },
+      {
+        "limb": "leftHand",
         "hold": "top"
       }
     ]
@@ -103,6 +119,10 @@
       {
         "limb": "leftHand",
         "hold": "top"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
       }
     ]
   },
@@ -138,6 +158,10 @@
       {
         "limb": "leftHand",
         "hold": "top"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
       }
     ]
   },
@@ -163,6 +187,10 @@
         "hold": "rest"
       },
       {
+        "limb": "leftHand",
+        "hold": "ledge"
+      },
+      {
         "limb": "leftFoot",
         "hold": "exit",
         "swap": true
@@ -172,11 +200,11 @@
         "hold": "far_step"
       },
       {
-        "limb": "leftHand",
-        "hold": "ledge"
+        "limb": "rightHand",
+        "hold": "top"
       },
       {
-        "limb": "rightHand",
+        "limb": "leftHand",
         "hold": "top"
       }
     ]
@@ -207,16 +235,21 @@
         "hold": "ledge"
       },
       {
+        "limb": "rightFoot",
+        "hold": "high_step"
+      },
+      {
         "limb": "rightHand",
         "hold": "needle",
         "crimp": true
       },
       {
-        "limb": "rightFoot",
-        "hold": "high_step"
+        "limb": "leftHand",
+        "hold": "top",
+        "crimp": true
       },
       {
-        "limb": "leftHand",
+        "limb": "rightHand",
         "hold": "top",
         "crimp": true
       }
@@ -267,6 +300,10 @@
       {
         "limb": "leftHand",
         "hold": "top"
+      },
+      {
+        "limb": "rightHand",
+        "hold": "top"
       }
     ]
   },
@@ -292,6 +329,10 @@
         "hold": "rest"
       },
       {
+        "limb": "leftHand",
+        "hold": "ledge"
+      },
+      {
         "limb": "leftFoot",
         "hold": "exit",
         "swap": true
@@ -299,10 +340,6 @@
       {
         "limb": "rightFoot",
         "hold": "far_step"
-      },
-      {
-        "limb": "leftHand",
-        "hold": "ledge"
       },
       {
         "limb": "rightHand",
@@ -315,6 +352,10 @@
       },
       {
         "limb": "rightHand",
+        "hold": "top"
+      },
+      {
+        "limb": "leftHand",
         "hold": "top"
       }
     ]
@@ -376,6 +417,10 @@
       },
       {
         "limb": "rightHand",
+        "hold": "top"
+      },
+      {
+        "limb": "leftHand",
         "hold": "top"
       }
     ]
@@ -446,6 +491,10 @@
       },
       {
         "limb": "rightHand",
+        "hold": "top"
+      },
+      {
+        "limb": "leftHand",
         "hold": "top"
       }
     ]

@@ -388,7 +388,7 @@
     "rightFoot": "pivot"
   },
   "targets": {
-    "moves": 6,
+    "moves": 7,
     "timeSeconds": null,
     "elimination": null
   },

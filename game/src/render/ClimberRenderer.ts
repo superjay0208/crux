@@ -6,6 +6,7 @@ import { Vec2D, vDist, vSub, vNorm, vPerp, vAdd, vScale } from '../core/vec';
 
 export class ClimberRenderer {
   private profile: ProfileConfig;
+  private reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   constructor(profile: ProfileConfig) {
     this.profile = profile;
@@ -114,6 +115,10 @@ export class ClimberRenderer {
 
     const leftHandScreen = camera.worldToScreen(snap.limbs.leftHand.pos);
     const rightHandScreen = camera.worldToScreen(snap.limbs.rightHand.pos);
+    if (snap.shake.active && snap.shake.hand && !this.reducedMotion) {
+      const restingHand = snap.shake.hand === 'leftHand' ? leftHandScreen : rightHandScreen;
+      restingHand.x += Math.sin(snap.tick*.45) * .045 * scale;
+    }
     const leftFootScreen = camera.worldToScreen(snap.limbs.leftFoot.pos);
     const rightFootScreen = camera.worldToScreen(snap.limbs.rightFoot.pos);
 

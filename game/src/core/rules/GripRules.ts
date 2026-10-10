@@ -63,13 +63,13 @@ export class GripRules {
 
       const worldPoly = getHoldWorldPolygon(hold);
       if (isPointInInflatedPolygon(limbPos, worldPoly, inflate)) {
-        const d = distToPolygon(limbPos, worldPoly);
+        const d = vDist(limbPos, { x: hold.pos[0], y: hold.pos[1] });
         if (d < minDistance) {
           minDistance = d;
           bestCandidate = {
             hold,
             holdWorldPoly: worldPoly,
-            distance: d,
+            distance: distToPolygon(limbPos, worldPoly),
           };
         }
       }
@@ -121,13 +121,13 @@ export class GripRules {
         continue;
       }
 
-      const distance = distToPolygon(incomingPos, worldPoly);
+      const distance = vDist(incomingPos, { x: hold.pos[0], y: hold.pos[1] });
       if (distance < minDistance) {
         minDistance = distance;
         bestCandidate = {
           hold,
           holdWorldPoly: worldPoly,
-          distance,
+          distance: distToPolygon(incomingPos, worldPoly),
           outgoingFoot,
         };
       }

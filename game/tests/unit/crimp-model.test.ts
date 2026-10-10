@@ -170,7 +170,7 @@ describe('Grip/profile data validation', () => {
 
   it('requires finite crimp and foot-swap tuning values', () => {
     const valid = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
-    expect(LevelLoader.validateProfile(valid).rules.footSwap.windowSeconds).toBe(3.6);
+    expect(LevelLoader.validateProfile(valid).rules.footSwap.windowSeconds).toBe(2.4);
 
     const missing = structuredClone(valid);
     delete missing.rules.crimp;

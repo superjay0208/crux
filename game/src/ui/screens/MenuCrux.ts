@@ -1,19 +1,22 @@
-import { LevelData } from '../../core/data/schema';
+import { LevelData, ProfileId } from '../../core/data/schema';
+import { modeSwitch } from './ModeSwitch';
 import { SaveStore } from '../../persist/SaveStore';
 
 export class MenuCrux {
   private container: HTMLElement;
-  constructor(parent: HTMLElement, levels: LevelData[], saves: SaveStore, callbacks: { onSelectLevel: (id: string) => void; onHome?: () => void }) {
+  constructor(parent: HTMLElement, levels: LevelData[], saves: SaveStore, callbacks: { onSelectLevel: (id: string) => void; onHome?: () => void; onMode?: (id: ProfileId) => void }, profileId: ProfileId = 'original_browser') {
     this.container = document.createElement('section');
     this.container.className = 'menu-crux-container';
     this.container.innerHTML = `<header class="menu-header"><div class="brand-mark">C<span>↗</span></div><div><p class="eyebrow">A CLIMBING PUZZLE</p><h1>CRUX</h1></div><div class="menu-actions"><p class="menu-intro">Read the wall. Make your move.</p><div class="practice-slot"></div></div></header><div class="menu-grid"></div><footer class="menu-footer"><span>DRAG LIMBS · Q / E CRIMP · SPACE SWAP</span><span>12 ROUTES / ONE MOVE AT A TIME</span></footer>`;
     const grid = this.container.querySelector('.menu-grid')!;
+    this.container.querySelector('.menu-actions')!.prepend(modeSwitch(profileId, id=>callbacks.onMode?.(id)));
+    if (profileId === 'realism') this.container.querySelector('.menu-intro')!.textContent = 'Place your feet. Find your rests.';
     const home=document.createElement('button');home.className='menu-home';home.textContent='← HOME';home.dataset.testid='menu-home';
     home.addEventListener('click',()=>callbacks.onHome?.());this.container.querySelector('.menu-header')!.prepend(home);
     for (const level of [...levels].sort((a, b) => a.order - b.order)) {
       if (level.group === 'PRACTICE' || level.id === 'lab') continue;
-      const unlocked = saves.isLevelUnlocked('original_browser', level.id, level.order);
-      const record = saves.getLevelRecord('original_browser', level.id);
+      const unlocked = saves.isLevelUnlocked(profileId, level.id, level.order);
+      const record = saves.getLevelRecord(profileId, level.id);
       const card = document.createElement('button');
       card.type = 'button';
       card.className = `menu-card ${record?.completed ? 'completed' : unlocked ? 'unlocked' : 'locked'}`;

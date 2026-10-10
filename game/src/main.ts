@@ -57,7 +57,8 @@ async function init() {
   if (params.get('shell') === 'true') {
     return;
   }
-  const profileName = params.get('profile') || 'original_browser';
+  const saveStore = new SaveStore();
+  const profileName = params.get('profile') || saveStore.getSelectedProfile();
   const directLevelId = params.get('level'); // e2e tests jump straight into a level
 
   let profile: ProfileConfig;
@@ -86,13 +87,20 @@ async function init() {
     return;
   }
 
+  const realismProfile = LevelLoader.validateProfile(await fetchJson<any>(assetUrl('profiles/realism.json')));
+  const standardProfile = profile.id === 'original_browser' ? profile :
+    LevelLoader.validateProfile(await fetchJson<any>(assetUrl('profiles/original_browser.json')));
+  const realismLevels = await Promise.all(ORIGINAL_LEVEL_IDS.map(async id =>
+    LevelLoader.validateLevel(await fetchJson<any>(assetUrl(`levels/realism/${id}.json`)))));
+  const modes = { original_browser: { profile: standardProfile, levels }, realism: { profile: realismProfile, levels: realismLevels } };
+  const selectedLevels = profile.id === 'realism' ? realismLevels : levels;
+
   const shellTitle = document.getElementById('shell-title');
   if (shellTitle) shellTitle.style.display = 'none';
 
-  const saveStore = new SaveStore();
-  saveStore.setCampaign(levels);
+  saveStore.setCampaign(selectedLevels);
   const audio = new AudioBank();
-  const router = new Router({ container, canvas, profile, levels, saveStore, audio });
+  const router = new Router({ container, canvas, profile, levels: selectedLevels, saveStore, audio, modes });
 
   if (directLevelId) {
     canvas.style.display = 'block';
@@ -109,9 +117,9 @@ async function init() {
     router,
     saveStore,
     audio,
-    levels,
-    profile,
-    level: directLevelId ? levels.find((l) => l.id === directLevelId) : undefined,
+    get levels() { return router.getLevels(); },
+    get profile() { return router.getProfile(); },
+    level: directLevelId ? selectedLevels.find((l) => l.id === directLevelId) : undefined,
     get facade() {
       return router.getFacade();
     },

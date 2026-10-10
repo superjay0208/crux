@@ -5,6 +5,7 @@ const CRIMP_KEYS: Readonly<Record<string, HandId>> = {
   KeyQ: 'leftHand',
   KeyE: 'rightHand',
 };
+const SHAKE_KEYS: Readonly<Record<string, HandId>> = { KeyZ: 'leftHand', KeyC: 'rightHand' };
 
 const SWAP_KEYS = new Set<FootSwapKey>(['KeyA', 'KeyD']);
 
@@ -14,6 +15,7 @@ const SWAP_KEYS = new Set<FootSwapKey>(['KeyA', 'KeyD']);
  */
 export class KeyboardInput {
   private pressedCrimpCodes = new Set<string>();
+  private pressedShakeCodes = new Set<string>();
   private disposed = false;
   private abortController = new AbortController();
 
@@ -32,6 +34,8 @@ export class KeyboardInput {
       if (hand) this.enqueueCrimp(hand, false);
     }
     this.pressedCrimpCodes.clear();
+    this.pressedShakeCodes.clear();
+    this.sim.enqueueCommand({ tick: this.sim.getTick(), type: 'shake', active: false });
     this.sim.enqueueCommand({ tick: this.sim.getTick(), type: 'swap_cancel' });
   }
 
@@ -85,6 +89,15 @@ export class KeyboardInput {
           return;
         }
 
+        const shake = SHAKE_KEYS[event.code];
+        if (shake && this.sim.profile.rules.realism) {
+          event.preventDefault();
+          if (event.repeat || this.pressedShakeCodes.has(event.code)) return;
+          this.pressedShakeCodes.add(event.code);
+          this.sim.enqueueCommand({ tick: this.sim.getTick(), type: 'shake', hand: shake, active: true });
+          return;
+        }
+
         if (event.code === 'Space') {
           event.preventDefault();
           if (event.repeat) return;
@@ -105,6 +118,11 @@ export class KeyboardInput {
     window.addEventListener(
       'keyup',
       (event) => {
+        const shake = SHAKE_KEYS[event.code];
+        if (shake && this.pressedShakeCodes.delete(event.code)) {
+          event.preventDefault();
+          this.sim.enqueueCommand({ tick: this.sim.getTick(), type: 'shake', hand: shake, active: false });
+        }
         const hand = CRIMP_KEYS[event.code];
         if (!hand || !this.pressedCrimpCodes.has(event.code)) return;
         event.preventDefault();

@@ -29,6 +29,7 @@ export class LevelLoader {
       if (data.movement.crossedReachFraction > 1) throw new Error('crossedReachFraction must be at most 1');
       this.requireFiniteNumberAbove(data.movement.crossTransition, 0, 'movement.crossTransition');
     }
+    if (finishHolds[0].capacity < 2 || !finishHolds[0].allowHands) throw new Error('Finish must allow two hands');
     for (const id of [data.goals?.crimpHold, data.finishSupportHold]) {
       if (id && !data.holds.some((hold: any) => hold.id === id)) throw new Error(`Unknown goal/support hold ${id}`);
     }
@@ -46,6 +47,16 @@ export class LevelLoader {
     }
     if (!data.id || !data.physics || !data.rules) {
       throw new Error('Profile missing required physics/rules fields');
+    }
+    if (!['original_browser','desktop','realism'].includes(data.id)) throw new Error('Unknown profile id');
+    if (data.rules.finishEstablishSeconds !== undefined) this.requireFiniteNumberAtLeast(data.rules.finishEstablishSeconds, 0, 'finishEstablishSeconds');
+    if (data.id === 'realism' && !data.rules.realism) throw new Error('Realism profile requires realism rules');
+    if (data.rules.realism) {
+      for (const key of ['idleDrain','armLoadDrain','moveDrain','handMoveCost','footMoveCost','shakeRecover',
+        'restMinFootLoad','restMaxSpeed','finishMinFootLoad','legStiffness','legDamping','legForceCap','footFriction','footReachGraceSeconds']) {
+        this.requireFiniteNumberAbove(data.rules.realism[key], 0, `realism.${key}`);
+      }
+      for (const key of ['restMinFootLoad','finishMinFootLoad','legForceCap']) if (data.rules.realism[key] > .92) throw new Error(`realism.${key} exceeds support limit`);
     }
 
     const crimp = data.rules.crimp;

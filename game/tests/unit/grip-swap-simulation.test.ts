@@ -88,7 +88,7 @@ describe('Grip types and foot-swap simulation', () => {
     for (let tick = 0; tick < 120; tick++) sim.stepTick();
 
     expect(sim.climber.limbs.leftHand.status).toBe('attached');
-    expect(sim.crimp.getReserve('leftHand')).toBeCloseTo(5 / 6, 4);
+    expect(sim.crimp.getReserve('leftHand')).toBeCloseTo(.75, 4);
     expect(sim.crimp.getReserve('rightHand')).toBe(1);
     expect(sim.getLatestSnapshot().crimp.leftHand.engaged).toBe(true);
 
@@ -210,11 +210,12 @@ describe('Grip types and foot-swap simulation', () => {
     expect(sim.climber.limbs.rightFoot.holdId).toBe('swap_right_foothold');
   });
 
-  it('G-15: unsupported crimp contact cannot finish until its matching key is active', () => {
+  it('G-15: a crimp finish needs both matched hands secured by their independent keys', () => {
     const level = cloneGripLab();
     for (const hold of level.holds) hold.finish = hold.id === 'left_crimp';
     const sim = new Simulation(level, profile);
     attachHandToCrimp(sim, 'leftHand', 'left_crimp');
+    attachHandToCrimp(sim, 'rightHand', 'left_crimp');
 
     sim.stepTick();
     expect(sim.session.getState()).toBe('Playing');
@@ -226,6 +227,9 @@ describe('Grip types and foot-swap simulation', () => {
       active: true,
     });
     sim.stepTick();
+    expect(sim.session.getState()).toBe('Playing');
+    sim.enqueueCommand({tick:sim.getTick(),type:'crimp',hand:'rightHand',active:true});
+    for(let tick=0;tick<42;tick++)sim.stepTick();
     expect(sim.session.getState()).toBe('Finished');
   });
 

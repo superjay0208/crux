@@ -1,6 +1,6 @@
 import { Vec2D, vDist, vDistSq, vSub, vDot, vLenSq, vLen } from '../vec';
 
-export type ProfileId = 'original_browser' | 'desktop';
+export type ProfileId = 'original_browser' | 'desktop' | 'realism';
 export type HandId = 'leftHand' | 'rightHand';
 export type FootId = 'leftFoot' | 'rightFoot';
 export type LimbId = HandId | FootId;
@@ -27,6 +27,7 @@ export interface ProfilePhysics {
 
 export interface ProfileRules {
   finishRequires: 'one_hand' | 'two_hands';
+  finishEstablishSeconds?: number;
   handsRequiredToHold: number;
   handsGraceSeconds: number;
   defaultHoldCapacity: number;
@@ -60,6 +61,25 @@ export interface ProfileRules {
     targetCenter?: number;
     targetWidth?: number;
   };
+  realism?: RealismRules;
+}
+
+/** Tunable game approximations, not human physiological measurements. */
+export interface RealismRules {
+  idleDrain: number;
+  armLoadDrain: number;
+  moveDrain: number;
+  handMoveCost: number;
+  footMoveCost: number;
+  shakeRecover: number;
+  restMinFootLoad: number;
+  restMaxSpeed: number;
+  finishMinFootLoad: number;
+  legStiffness: number;
+  legDamping: number;
+  legForceCap: number;
+  footFriction: number;
+  footReachGraceSeconds: number;
 }
 
 export interface ProfileVisual {
@@ -145,7 +165,7 @@ export interface LevelData {
 
 export interface ReplayCommand {
   tick: number;
-  type: 'down' | 'move' | 'up' | 'drop' | 'reset' | 'crimp' | 'swap_key' | 'swap_confirm' | 'swap_cancel';
+  type: 'down' | 'move' | 'up' | 'drop' | 'reset' | 'crimp' | 'shake' | 'swap_key' | 'swap_confirm' | 'swap_cancel';
   limb?: LimbId;
   pos?: [number, number];
   hand?: HandId;
