@@ -8,7 +8,14 @@ Current plan: [docs/15-fatigue-and-realism-mode.md](docs/15-fatigue-and-realism-
 - [x] F3 Persistent fatigue and qualified one-arm shake recovery.
 - [x] F4 Mode selection, separate saves, minimal indicators, twelve realism variants.
 - [x] F5 Complete physics/replay and production browser validation for both modes.
-- [ ] F6 Visual review, local launcher, web deployment and live verification.
+- [x] F6 Visual review, local launcher, web deployment and live verification.
+
+Current checks: 93 unit tests, 24 solutions/fresh replays, and all 48 browser scenarios passed locally.
+Local launcher serves build `c44c5f66aab6730d` at http://localhost:8642/.
+Release commit `d70b09c`: [GitHub validation/deployment](https://github.com/superjay0208/crux/actions/runs/38029012451) passed, including all 48 Chromium browser tests.
+The public URL passed real-input finishes in both modes, separate saves, demo, route, JSON and font checks.
+Live build `f03539518ea0d119` serves the same `index-DfSqbOKn.js` / `index-WkNoTfl8.css` as the local release.
+All F0–F6 tasks are complete. Optional future work is listed below.
 
 Prior completed polish:
 

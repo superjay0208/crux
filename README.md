@@ -39,6 +39,8 @@ torque, wall inclination, and heel/toe hooks are not resolved by this front-view
 Validation details and deployment steps: [web publishing](docs/13-web-publishing.md).
 Current research, implementation details and acceptance gates: [fatigue and realism plan](docs/15-fatigue-and-realism-mode.md).
 Current results, tuning and limitations: [prototype validation](docs/16-fatigue-realism-validation.md).
+Release checks passed: 93 unit tests, all 24 route solutions/fresh replays, 48 production browser
+tests on Linux/Chromium, and real-input gameplay smoke on the published website.
 
 ## Develop and validate
 

@@ -62,9 +62,13 @@ The final Crux section also retains an intermediate stance: skipping directly to
 - Replay framing checks cover every route in both modes at 1280x720, 1012x1050 at DPR 1.25, 640x360 at DPR 2, and 1920x800. Camera input conversion remains invertible.
 - Production build passed. All **48 browser scenarios passed locally**: 47 in the full production regression, then the corrected final Crux route in a focused rerun. All twelve routes in both modes use actual mouse/keyboard input. The suite also covers matched finishes, paired crimp rings, qualified recovery, mode saves, blur/retry/navigation, hidden-tab freeze, reduced motion, display scaling, and existing gameplay.
 - The production **`/crux/` subpath smoke passed**: menu demo, two-hand finishes in both modes, isolated saves, direct-level loading, JSON and font requests. Screenshots were visually reviewed, including loaded feet, recovery, final matched crimps, and whole-body containment.
-- Website release and post-deployment verification are pending.
+- **GitHub Linux/Chromium validation and Pages deployment passed** for release `d70b09c`: [run 38029012451](https://github.com/superjay0208/crux/actions/runs/38029012451). The complete suite of 48 browser tests ran with no retries before deployment.
+- **Live website smoke passed** at https://superjay0208.github.io/crux/: actual first-route finishes in both modes, refusal of a single-hand finish, isolated progression and reload, animated demo, direct route, JSON and fonts. No browser errors or failed HTTP responses were observed.
+- Local launcher refreshed and health-checked at http://localhost:8642/, build `c44c5f66aab6730d`. The deployed Linux build is `f03539518ea0d119`; both serve `index-DfSqbOKn.js` and `index-WkNoTfl8.css`. The live Crux variant has 21 target moves and 16 checkpoints, confirming the final foot-progression content is deployed.
 
 Canonical replay evidence is versioned in `game/tests/replays/campaign/` and `game/tests/replays/realism/`. Raw results and screenshots are saved locally in `validation/fatigue-realism-2026-10-09/`; generated output is intentionally excluded from Git. CI repeats the complete physics, unit, asset, browser, and web-path gates before Pages publishing.
+
+The final small FOOT cue received a focused production rerun locally; the final complete browser run on Linux/Chromium covers that cue across all twelve realism finishes. Deployment metadata is archived in `deployment-results.json`, and live/subpath smoke results in `browser/live-results.json` and `browser/subpath-results.json`.
 
 ## Limits and next useful work
 
