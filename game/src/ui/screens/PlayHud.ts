@@ -94,7 +94,8 @@ export class PlayHud {
       const reserve=Math.max(0,Math.min(1,state.reserve));
       element.dataset.state=state.onCrimp?(state.engaged?'engaged':'grace'):state.reserve<.999?'recovering':'ready';
       element.dataset.warning=String(state.onCrimp&&(!state.engaged||reserve<.22));
-      element.style.setProperty('--grip-color',`hsl(${state.onCrimp&&!state.engaged?0:reserve*125} 85% 61%)`);
+      const hue=state.onCrimp&&!state.engaged?0:Math.max(0,(reserve-.2)/.8)*125;
+      element.style.setProperty('--grip-color',`hsl(${hue} 85% 61%)`);
       element.querySelector('.grip-reserve')!.setAttribute('stroke-dasharray',`${reserve*100} 100`);
       const progress=element.querySelector('[role="progressbar"]')!;
       progress.setAttribute('aria-valuenow',String(Math.round(reserve*100)));

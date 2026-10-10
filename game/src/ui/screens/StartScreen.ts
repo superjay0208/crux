@@ -75,6 +75,10 @@ export class StartScreen {
     const level=this.levels.find(l=>l.id===replay.levelId)!;
     this.sim=new Simulation(level,this.profile);
     this.sim.enqueueCommands(replay.commands.map(c=>({...c,pos:c.pos?{x:c.pos[0],y:c.pos[1]}:undefined})));
+    // Replays begin with a settling interval. Show its stable pose immediately, including
+    // when reduced motion requests a still image rather than autoplay.
+    const firstTick=Math.min(...replay.commands.map(c=>c.tick));
+    for(let tick=0;tick<Math.min(30,firstTick);tick++)this.sim.stepTick();
     this.holds.setLevel(level);this.effects.clear();this.pause=0;
     this.sim.session.addListener(event=>this.effects.handleEvent(event,this.sim.getTick(),this.sim.climber));
     this.root.querySelector('[data-testid="demo-route"]')!.textContent=level.name;

@@ -52,7 +52,7 @@ test('hand ring follows the hand, turns red and shakes near exhaustion',async({p
   });expect(tracking).toBeLessThan(4);
   await expect(ring).toHaveAttribute('data-warning','true',{timeout:6000});
   const hue=await ring.evaluate(el=>parseFloat((el as HTMLElement).style.getPropertyValue('--grip-color').slice(4)));
-  expect(hue).toBeLessThan(29);
+  expect(hue).toBeLessThan(4);
   expect(await ring.locator('svg').evaluate(el=>getComputedStyle(el).animationName)).toBe('grip-shake');
   fs.mkdirSync(output,{recursive:true});await page.screenshot({path:`${output}/grip-warning.png`});
   await page.emulateMedia({reducedMotion:'reduce'});
