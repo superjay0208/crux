@@ -12,6 +12,7 @@ test.describe('realism campaign through player input',()=>{
     const snap=await page.evaluate(()=>(window as any).__crux.facade.getSimulation().getLatestSnapshot());
     expect(snap.sessionState).toBe('Finished');expect(snap.finish.hands).toBe(2);
     expect(snap.support.footLoad).toBeGreaterThanOrEqual(.15);expect(snap.stamina).toBeGreaterThan(0);
+    await expect(page.getByTestId('route-goals')).toContainText('✓ FOOT');
     expect(snap.limbs.leftHand.holdId).toBe('top');expect(snap.limbs.rightHand.holdId).toBe('top');
     if(recipe.id==='pinpoint') {
       const left=await page.getByTestId('crimp-left').boundingBox(),right=await page.getByTestId('crimp-right').boundingBox();

@@ -10,7 +10,7 @@ Implementation date: 2026-10-09. Research and execution plan: [15-fatigue-and-re
 - Hold Z/C to unload and shake the left/right arm. Recovery requires the other hand on a jug, at least 25% useful foot loading, balance, and a steady body. Release the key and drag the resting hand back. Invalid activation never drops the last supporting hand.
 - Ordinary toe support pushes through the leg rather than pulling the torso through a rope. High, overly folded, overextended, unreachable, or incorrectly directed contacts do not provide upward support. A briefly unweighted high step is allowed; the body must transfer weight before moving the next foot.
 - All twelve realism routes include upward foot progression and viable jug rest opportunities. Realism establishment needs at least 15% useful foot load. Standard and Realism have separate unlocks, records, and menu demos.
-- Hip reserve, hand crimp rings, shoe loading marks, and arm recovery feedback remain compact. Paired crimp rings separate when the hands match a small finish. Hidden tabs pause resources and clear held inputs; retry and navigation clear attempt state.
+- Hip reserve, hand crimp rings, shoe loading marks, and arm recovery feedback remain compact. The FOOT goal shows whether the realism finish has useful support. Paired crimp rings separate when the hands match a small finish. Hidden tabs pause resources and clear held inputs; retry and navigation clear attempt state.
 
 ## Final tuning
 

@@ -108,7 +108,7 @@ export class PlayHud {
     goals.push(`${snap.finish.hands}/2 TOP${snap.finish.progress > 0 ? ` ${Math.round(snap.finish.progress*100)}%` : ''}`);
     if(this.level?.goals?.crimpHold)goals.push(`${snap.goals.crimp?'✓':'○'} GRIP`);
     if(this.level?.goals?.footSwaps)goals.push(`${snap.goals.footSwaps}/${this.level.goals.footSwaps} SWAP`);
-    if(this.level?.finishSupportHold)goals.push(`${snap.goals.support?'✓':'○'} FOOT`);
+    if(this.level?.finishSupportHold||this.realism)goals.push(`${snap.goals.support?'✓':'○'} FOOT`);
     if(this.level?.goals?.checkpoints?.length)goals.push(`${snap.goals.checkpoints.length}/${this.level.goals.checkpoints.length} CONTACTS`);
     this.container.querySelector('[data-testid="route-goals"]')!.textContent=goals.join(' · ');
     for(const [hand,element] of this.hands) {
